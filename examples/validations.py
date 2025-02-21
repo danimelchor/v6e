@@ -81,6 +81,7 @@ def main() -> None:
 
     my_validation = v6e.Gte(8) | v6e.Lte(4)
     reveal_type(my_validation)
+    print_title("Type checking example")
     prompt("<4 or >8, please: ", my_validation)
 
 

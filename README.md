@@ -11,11 +11,6 @@ A simple, type-safe, and extensible Python validations framework
 Check out the examples in `./examples`! You can run them locally with:
 
 ```
-uv run examples/<name>
-```
-
-For example:
-```
 uv run examples/validations.py
 ```
 

@@ -22,7 +22,7 @@ repos:
       language: python
       types_or: [python, pyi]
       args: [--fix]
-      files: ^v6e/.*
+      exclude: ^tests/.*
       require_serial: true
       additional_dependencies: ["ruff==0.8.1"]
     - id: ruff-format
@@ -31,6 +31,6 @@ repos:
       entry: ruff format --force-exclude
       language: python
       types_or: [python, pyi]
-      files: ^v6e/.*
+      exclude: ^tests/.*
       require_serial: true
       additional_dependencies: ["ruff==0.8.1"]
