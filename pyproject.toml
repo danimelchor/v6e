@@ -1,0 +1,15 @@
+[project]
+name = "v6e"
+version = "0.1.0"
+description = "A powerful validations framework"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "typing-extensions>=4.12.2",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
