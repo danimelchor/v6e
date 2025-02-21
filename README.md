@@ -22,22 +22,22 @@ import v6e
 
 my_validation = v6e.Range(18, 21)
 
-# .test(...)
-my_validation.test(18)  # True
-my_validation.test(21)  # True
-my_validation.test(54)  # False
+# Using it like a function
+my_validation(18)  # True
+my_validation(21)  # True
+my_validation(54)  # False
 
-# .validate(...)
-my_validation.validate(21)  # Nothing happens -> continue to next line
-my_validation.validate(54)  # Raises a ValidationException()
+# .ensure(...)
+my_validation.ensure(21)  # Nothing happens -> continue to next line
+my_validation.ensure(54)  # Raises a ValidationException
 ```
 
 **`AND` and `OR` validations**
 ```python
-my_validation = (v6e.StartsWith("foo") | v6e.EndsWith("foo")) & v6e.ReMatch(r"^[a-z]*$")
-my_validation.test("foo12")  # True
-my_validation.test("12foo")  # True
-my_validation.test("1foo2")  # False
+my_validation = (v6e.StartsWith("foo") | v6e.EndsWith("foo")) & v6e.ReMatch(r"^[a-z0-9]*$")
+my_validation("foo12")  # True
+my_validation("12foo")  # True
+my_validation("1foo2")  # False
 ```
 
 **Custom validations**
@@ -46,10 +46,10 @@ def is_div_three(x: int):
     if x % 3 != 0:
         raise ValueError("Woops! The Earth is 4.543 billion years old. (Try 4543000000)")
 
-my_validation = v6e.Custom(validate_earth_age)
-my_validation.test(3)  # True
-my_validation.test(6)  # True
-my_validation.test(4)  # False
+my_validation = v6e.Custom(is_div_three)
+my_validation(3)  # True
+my_validation(6)  # True
+my_validation(4)  # False
 ```
 
 ## 🐍 Type-checking
@@ -59,8 +59,8 @@ from the arguments you pass in.
 
 In this example your editor will correctly infer the type:
 ```python
-my_validation = v6e.StartsWith("foo") | v6e.Range(1, 4)
-reveal_type(hours)  # Type of "res" is "timedelta | str | int"
+my_validation = v6e.Choices([2,3]) | v6e.Range(1, 4)
+reveal_type(my_validation)  # Type of "res" is "_Union[int]" (compatible with "Callable[[int], None]")
 ```
 
 ## Why do I care?
