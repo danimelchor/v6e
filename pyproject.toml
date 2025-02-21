@@ -1,15 +1,22 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
 [project]
 name = "v6e"
-version = "0.1.0"
 description = "A powerful validations framework"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dynamic = ["version"]
 requires-python = ">=3.11"
+authors = [
+  {name = "Daniel Melchor", email = "dmelchor@pm.me"},
+]
+keywords = ["validation", "validate", "data", "check"]
 dependencies = [
     "typing-extensions>=4.12.2",
 ]
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.hatch.version]
+path = "v6e/__init__.py"

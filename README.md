@@ -81,4 +81,4 @@ age = term.prompt("What's your age?", klass=int)
 ## Why do I care?
 
 Type checking will help you catch issues way earlier in the development cycle. It will also
-provide nice autocomplete features in your editor that will make you faster 󱐋.
+provide nice autocomplete features in your editor that will make you faster ⚡.
