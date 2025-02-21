@@ -1,14 +1,36 @@
 repos:
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  # Ruff version.
-  rev: v0.9.7
-  hooks:
-    # Run the linter.
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.394
+    hooks:
+    - id: pyright
+      files: ^v6e/.*
+  - repo: local
+    hooks:
+    - id: pytest
+      name: pytest
+      entry: uv run pytest
+      language: python
+      types: [python]
+      files: ^tests/.*
+      pass_filenames: false
+      always_run: true
+      additional_dependencies: ["pytest==8.3.4"]
     - id: ruff
-      args: [ --fix ]
-    # Run the formatter.
+      name: Run 'ruff' for extremely fast Python linting
+      description: "Run 'ruff' for extremely fast Python linting"
+      entry: ruff check --force-exclude
+      language: python
+      types_or: [python, pyi]
+      args: [--fix]
+      files: ^v6e/.*
+      require_serial: true
+      additional_dependencies: ["ruff==0.8.1"]
     - id: ruff-format
-- repo: https://github.com/RobertCraigie/pyright-python
-  rev: v1.1.394
-  hooks:
-  - id: pyright
+      name: Run 'ruff format'
+      description: "Run 'ruff format' for extremely fast Python formatting"
+      entry: ruff format --force-exclude
+      language: python
+      types_or: [python, pyi]
+      files: ^v6e/.*
+      require_serial: true
+      additional_dependencies: ["ruff==0.8.1"]

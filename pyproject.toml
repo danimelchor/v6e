@@ -18,5 +18,17 @@ dependencies = [
     "typing-extensions>=4.12.2",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.4",
+  "ruff>=0.9.7",
+  "pyright>=1.1.394",
+]
+
 [tool.hatch.version]
 path = "v6e/__init__.py"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["tests"]

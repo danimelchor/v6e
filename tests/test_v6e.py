@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pytest import mark
 
-from term import validations as v
+import v6e
 
 
 @mark.parametrize(
@@ -15,7 +15,7 @@ from term import validations as v
     ],
 )
 def test_range_validation(input, expected):
-    assert v.Range(1, 2).test(input) == expected
+    assert v6e.Range(1, 2)(input) == expected
 
 
 @mark.parametrize(
@@ -28,8 +28,8 @@ def test_range_validation(input, expected):
     ],
 )
 def test_intersection_validation(input, expected):
-    val = v.ReSearch(r"[0-9]+$") & v.StartsWith("f")
-    assert val.test(input) == expected
+    val = v6e.ReSearch(r"[0-9]+$") & v6e.StartsWith("f")
+    assert val(input) == expected
 
 
 @mark.parametrize(
@@ -42,16 +42,16 @@ def test_intersection_validation(input, expected):
     ],
 )
 def test_union_validation(input, expected):
-    val = v.ReSearch(r"[0-9]{2}$") | v.StartsWith("f")
-    assert val.test(input) == expected
+    val = v6e.ReSearch(r"[0-9]{2}$") | v6e.StartsWith("f")
+    assert val(input) == expected
 
 
 def test_union_and_intersection():
-    val = v.ReSearch(r"[0-9]{2}$") | v.StartsWith("f") & v.EndsWith("2")
-    assert val.test("12")
-    assert val.test("f2")
-    assert val.test("f12")
-    assert not val.test("z2")
+    val = v6e.ReSearch(r"[0-9]{2}$") | v6e.StartsWith("f") & v6e.EndsWith("2")
+    assert val("12")
+    assert val("f2")
+    assert val("f12")
+    assert not val("z2")
 
 
 @mark.parametrize(
@@ -63,7 +63,7 @@ def test_union_and_intersection():
     ],
 )
 def test_choices_validation(input, expected):
-    assert v.Choices([1]).test(input) == expected
+    assert v6e.Choices([1])(input) == expected
 
 
 def _custom_validation(x: int) -> None:
@@ -81,4 +81,4 @@ def _custom_validation(x: int) -> None:
     ],
 )
 def test_custom_validation(input, expected):
-    assert v.Custom(_custom_validation).test(input) == expected
+    assert v6e.Custom(_custom_validation)(input) == expected
