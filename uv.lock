@@ -111,6 +111,7 @@ wheels = [
 
 [[package]]
 name = "v6e"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "typing-extensions" },

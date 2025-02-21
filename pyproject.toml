@@ -6,9 +6,9 @@ build-backend = "hatchling.build"
 name = "v6e"
 description = "A powerful validations framework"
 readme = "README.md"
+version = "0.1.1"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
-dynamic = ["version"]
 requires-python = ">=3.11"
 authors = [
   {name = "Daniel Melchor", email = "dmelchor@pm.me"},
@@ -24,9 +24,6 @@ dev = [
   "ruff>=0.9.7",
   "pyright>=1.1.394",
 ]
-
-[tool.hatch.version]
-path = "v6e/__init__.py"
 
 [tool.pytest.ini_options]
 minversion = "8.0"

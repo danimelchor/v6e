@@ -10,8 +10,6 @@ import v6e.bounds as b
 
 T = t.TypeVar("T")
 
-__version__ = "0.1.0"
-
 
 class ValidationException(Exception):
     pass
