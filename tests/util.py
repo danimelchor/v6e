@@ -4,6 +4,7 @@ import typing as t
 
 from pytest import mark
 
+from v6e.exceptions import ValidationException
 from v6e.types.base import V6eType
 
 T = t.TypeVar("T")
@@ -38,8 +39,22 @@ class V6eFullTestCase(t.Generic[T]):
     def __repr__(self) -> str:
         return f"{self.fn} for {self.args} == {self.check}"
 
-    def run(self) -> bool:
-        return self.fn.check(*self.args)
+    def run(self):
+        exc = None
+        try:
+            self.fn.parse(*self.args)
+        except ValidationException as e:
+            exc = e
+
+        if self.check and exc is not None:
+            raise AssertionError(
+                f"{self.fn} for {self.args} failed with {exc} but was expected to pass"
+            )
+
+        if not self.check and exc is None:
+            raise AssertionError(
+                f"{self.fn} for {self.args} was expected fail but it did not"
+            )
 
 
 def generate_tests(*tests: V6eTest) -> t.Callable[...]:
@@ -48,7 +63,7 @@ def generate_tests(*tests: V6eTest) -> t.Callable[...]:
         all_test_cases.extend(test.iter_cases())
 
     def decorator(
-        fun: t.Callable[[V6eFullTestCase], None],
+        _fun: t.Callable[[V6eFullTestCase], None],
     ) -> t.Callable[[V6eFullTestCase], None]:
         @mark.parametrize(
             "test",
@@ -56,7 +71,7 @@ def generate_tests(*tests: V6eTest) -> t.Callable[...]:
             ids=lambda x: str(x),
         )
         def inner(test: V6eFullTestCase):
-            fun(test)
+            test.run()
 
         return inner
 
