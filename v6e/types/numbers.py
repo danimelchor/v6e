@@ -74,7 +74,10 @@ class NumericMixin(V6eType[Numeric]):
 class V6eIntType(NumericMixin[int]):
     @override
     def _parse(self, raw):
-        return int(raw)
+        value = int(raw)
+        if value != float(raw):
+            raise ValueError(f"The value {raw!r} is not a valid integer.")
+        return value
 
 
 class V6eFloatType(NumericMixin[float]):
