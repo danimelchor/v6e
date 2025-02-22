@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Callable, reveal_type
 
-import v6e
+from v6e import v
 
 # --- DEMO UTILS ---
 RED = "\033[31m"
@@ -24,10 +24,10 @@ def print_example(prompt: str, result: bool) -> None:
 # --- DEMO ---
 def main() -> None:
     # Basic usage
-    can_drink = v6e.Gte(21)
+    can_drink = v.int().gte(21)
     print_title("Basic - Age")
-    print_example("With age 21 can you drink?", can_drink(21))
-    print_example("With age 20 can you drink?", can_drink(20))
+    print_example("With age 21 can you drink?", can_drink.check(21))
+    print_example("With age 20 can you drink?", can_drink.check(20))
 
     # You can "AND" multiple validations
     interview_channel = v6e.StartsWith("#") & v6e.ReSearch(
