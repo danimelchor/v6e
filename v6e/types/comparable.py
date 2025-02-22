@@ -15,7 +15,7 @@ class _Comparable(t.Protocol):
 Comparable = t.TypeVar("Comparable", bound=_Comparable)
 
 
-class V6eComparableMixin(V6eType[Comparable]):
+class ComparableMixin(V6eType[Comparable]):
     def gt(self, value: Comparable) -> t.Self:
         return self._chain(
             f"gt({value})",

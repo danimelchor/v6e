@@ -1,36 +1,34 @@
-from v6e.types.boolean import V6eBoolType
-from v6e.types.calendar import V6eDateTimeType, V6eTimeDeltaType
-from v6e.types.numbers import V6eFloatType, V6eIntType
-from v6e.types.string import V6eStrType
+from v6e.exceptions import ValidationException
+from v6e.types import base, boolean, calendar, numbers, string
 
-# class v:
-#     int = V6eIntType
-#     float = V6eFloatType
-#     str = V6eStrType
-#     bool = V6eBoolType
-#     datetime = V6eDateTimeType
-#     timedelta = V6eTimeDeltaType
+V6eType = base.V6eType
 
+V6eBooleanType = boolean.BoolType
+V6eIntType = numbers.IntType
+V6eFloatType = numbers.FloatType
+V6eStrType = string.StrType
+V6eDateTimeType = calendar.DateTimeType
+V6eTimeDeltaType = calendar.TimeDeltaType
 
-def int():
-    return V6eIntType()
+bool = boolean.BoolType
+int = numbers.IntType
+float = numbers.FloatType
+str = string.StrType
+datetime = calendar.DateTimeType
+timedelta = calendar.TimeDeltaType
 
-
-def float():
-    return V6eFloatType()
-
-
-def str():
-    return V6eStrType()
-
-
-def bool():
-    return V6eBoolType()
-
-
-def datetime():
-    return V6eDateTimeType()
-
-
-def timedelta():
-    return V6eTimeDeltaType()
+__all__ = [
+    "V6eBooleanType",
+    "V6eIntType",
+    "V6eFloatType",
+    "V6eStrType",
+    "V6eDateTimeType",
+    "V6eTimeDeltaType",
+    "ValidationException",
+    "bool",
+    "int",
+    "float",
+    "str",
+    "datetime",
+    "timedelta",
+]

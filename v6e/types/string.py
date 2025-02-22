@@ -1,9 +1,9 @@
 from typing_extensions import override
 
-from v6e.types.comparable import V6eComparableMixin
+from v6e.types.comparable import ComparableMixin
 
 
-class V6eStrType(V6eComparableMixin[str]):
+class StrType(ComparableMixin[str]):
     @override
     def _parse(self, raw):
         if not isinstance(raw, str):

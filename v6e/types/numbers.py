@@ -4,12 +4,12 @@ import typing as t
 
 from typing_extensions import override
 
-from v6e.types.comparable import V6eComparableMixin
+from v6e.types.comparable import ComparableMixin
 
 Numeric = t.TypeVar("Numeric", bound=int | float)
 
 
-class V6eNumericMixin(V6eComparableMixin[Numeric]):
+class NumericMixin(ComparableMixin[Numeric]):
     def positive(self) -> t.Self:
         return self._chain("positive()", lambda x: x > 0, "Value {} must be positive")
 
@@ -37,7 +37,7 @@ class V6eNumericMixin(V6eComparableMixin[Numeric]):
         return self.multiple_of(value, _name="step")
 
 
-class V6eIntType(V6eNumericMixin[int]):
+class IntType(NumericMixin[int]):
     @override
     def _parse(self, raw):
         value = int(raw)
@@ -46,7 +46,7 @@ class V6eIntType(V6eNumericMixin[int]):
         return value
 
 
-class V6eFloatType(V6eNumericMixin[float]):
+class FloatType(NumericMixin[float]):
     @override
     def _parse(self, raw):
         return float(raw)

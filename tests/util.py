@@ -6,8 +6,7 @@ from itertools import product
 
 from pytest import mark
 
-from v6e.exceptions import ValidationException
-from v6e.types.base import V6eType
+import v6e as v
 
 T = t.TypeVar("T")
 
@@ -15,10 +14,10 @@ T = t.TypeVar("T")
 @t.final
 @dataclass
 class V6eTest(t.Generic[T]):
-    fn: V6eType[T] | list[V6eType[T]]
+    fn: v.V6eType[T] | list[v.V6eType[T]]
     success_args: list[t.Any] | None = None
     failure_args: list[t.Any] | None = None
-    exc: t.Type[Exception] = ValidationException
+    exc: t.Type[Exception] = v.ValidationException
 
     def iter_cases(self) -> t.Generator[V6eCase, None, None]:
         fns = self.fn if isinstance(self.fn, list) else [self.fn]
@@ -45,10 +44,10 @@ class V6eTest(t.Generic[T]):
 @t.final
 @dataclass
 class V6eCase(t.Generic[T]):
-    fn: V6eType[T]
+    fn: v.V6eType[T]
     arg: list[t.Any] | None = None
     fails: bool = False
-    exc: t.Type[Exception] = ValidationException
+    exc: t.Type[Exception] = v.ValidationException
 
     def __repr__(self) -> str:
         result = "fails" if self.fails else "succeeds"

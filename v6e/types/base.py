@@ -11,13 +11,13 @@ from v6e.exceptions import ValidationException
 T = t.TypeVar("T")
 P = t.TypeVar("P")
 
-V6eCheckFn = t.Callable[[T], bool]
+CheckFn = t.Callable[[T], bool]
 
 
-class V6eCheck(t.Generic[T]):
+class Check(t.Generic[T]):
     __slots__ = ("_fn", "_name", "_error_message")
 
-    def __init__(self, name: str, fn: V6eCheckFn[T], error_message: str) -> None:
+    def __init__(self, name: str, fn: CheckFn[T], error_message: str) -> None:
         self._fn = fn
         self._name = name
         self._error_message = error_message
@@ -31,7 +31,7 @@ class V6eCheck(t.Generic[T]):
         return f".{self._name}"
 
 
-class V6eParseResult(t.Generic[T]):
+class ParseResult(t.Generic[T]):
     __slots__ = ("_result", "_error_message", "_cause")
 
     def __init__(
@@ -66,33 +66,33 @@ class V6eParseResult(t.Generic[T]):
 class V6eType(ABC, t.Generic[T]):
     def __init__(self) -> None:
         super().__init__()
-        self._checks: list[V6eCheck] = []
+        self._checks: list[Check] = []
 
-    def _chain(self, name: str, check: V6eCheckFn[T], error_message: str) -> t.Self:
+    def _chain(self, name: str, check: CheckFn[T], error_message: str) -> t.Self:
         cp = copy(self)
-        cp._checks.append(V6eCheck(name, check, error_message))
+        cp._checks.append(Check(name, check, error_message))
         return cp
 
-    def _or(self, other: V6eType[P]) -> _V6eUnion[T, P]:
-        return _V6eUnion(self, other)
+    def _or(self, other: V6eType[P]) -> _Union[T, P]:
+        return _Union(self, other)
 
     @abstractmethod
     def _parse(self, raw: t.Any) -> T: ...
 
     @t.final
-    def safe_parse(self, raw: t.Any) -> V6eParseResult:
+    def safe_parse(self, raw: t.Any) -> ParseResult:
         try:
             value = self._parse(raw)
         except Exception as e:
-            return V6eParseResult(
+            return ParseResult(
                 error_message=f"Failed to parse {raw} as {self}",
                 _cause=e,
             )
 
         for check in self._checks:
             if err := check(value):
-                return V6eParseResult(error_message=err)
-        return V6eParseResult(result=value)
+                return ParseResult(error_message=err)
+        return ParseResult(result=value)
 
     @t.final
     def check(self, raw: t.Any) -> bool:
@@ -111,7 +111,7 @@ class V6eType(ABC, t.Generic[T]):
         return f"{self.__class__.__name__}{checks}"
 
 
-class _V6eUnion(V6eType[T | P]):
+class _Union(V6eType[T | P]):
     def __init__(self, left: V6eType[T], right: V6eType[P]) -> None:
         super().__init__()
         self.left = left

@@ -8,7 +8,7 @@ TRUE_BOOL_STR_LITERALS: set[str] = {"true", "yes", "y"}
 FALSE_BOOL_STR_LITERALS: set[str] = {"false", "no", "n"}
 
 
-class V6eBoolType(V6eType[bool]):
+class BoolType(V6eType[bool]):
     @override
     def _parse(self, raw):
         if isinstance(raw, str):
