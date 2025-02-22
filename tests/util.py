@@ -51,19 +51,20 @@ class V6eCase(t.Generic[T]):
     exc: t.Type[Exception] = ValidationException
 
     def __repr__(self) -> str:
-        return f"{self.fn} for {self.arg} == {not self.fails}"
+        result = "fails" if self.fails else "succeeds"
+        return f"{self.fn} for {self.arg} {result}"
 
     def run(self):
         parse_res = self.fn.safe_parse(self.arg)
 
         if not self.fails and parse_res.is_err():
             raise AssertionError(
-                f"{self.fn} for {self.arg} failed but was expected to pass"
+                f"{self.fn} for {self.arg!r} failed but was expected to pass"
             ) from parse_res.get_exception()
 
         if self.fails and parse_res.is_ok():
             raise AssertionError(
-                f"{self.fn} for {self.arg} was expected fail but it did not"
+                f"{self.fn} for {self.arg!a} was expected fail but it did not"
             )
 
 
