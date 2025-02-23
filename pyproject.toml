@@ -18,6 +18,12 @@ dependencies = [
     "typing-extensions>=4.12.2",
 ]
 
+[project.urls]
+Documentation = "https://github.com/danimelchor/v6e"
+Homepage = "https://github.com/danimelchor/v6e"
+Repository = "https://github.com/danimelchor/v6e"
+Issues = "https://github.com/danimelchor/v6e/issues"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.3.4",
