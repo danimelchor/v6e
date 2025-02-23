@@ -1,5 +1,11 @@
 # 🔍 V6E
 
+[![PyPI version](https://badge.fury.io/py/v6e.svg)](https://badge.fury.io/py/v6e)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/v6e.svg)](https://pypi.org/project/v6e/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/v6e)](https://pypi.org/project/v6e/)
+[![Contributors](https://img.shields.io/github/contributors/danimelchor/v6e)](https://github.com/danimelchor/v6e/graphs/contributors)
+
 A simple, type-safe, and extensible Python validations framework
 
 ### Why the name?
