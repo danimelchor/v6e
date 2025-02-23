@@ -15,7 +15,7 @@ P = t.ParamSpec("P")
 V6eTypeType = t.TypeVar("V6eTypeType", bound="V6eType")
 
 
-class ParseResult(t.Generic[T]):
+class V6eResult(t.Generic[T]):
     __slots__ = ("_result", "_error_message", "_cause")
 
     def __init__(
@@ -47,7 +47,7 @@ class ParseResult(t.Generic[T]):
         return exc
 
 
-CheckFn: t.TypeAlias = t.Callable[[T], ParseResult]
+CheckFn: t.TypeAlias = t.Callable[[T], V6eResult]
 
 
 class Check(t.NamedTuple, t.Generic[T]):
@@ -64,9 +64,9 @@ def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
             try:
                 res = wrapped_fun(self, value, *args, **kwargs)
             except (ValueError, TypeError, ValidationException) as e:
-                return ParseResult(error_message=str(e))
+                return V6eResult(error_message=str(e))
 
-            return ParseResult(
+            return V6eResult(
                 result=value if res is None else res,
             )
 
@@ -95,11 +95,11 @@ class V6eType(ABC, t.Generic[T]):
         return _Union(self, other)
 
     @t.final
-    def safe_parse(self, raw: t.Any) -> ParseResult[T]:
+    def safe_parse(self, raw: t.Any) -> V6eResult[T]:
         try:
             value = self.parse_raw(raw)
         except Exception as e:
-            return ParseResult(
+            return V6eResult(
                 error_message=f"Failed to parse {raw} as {self}",
                 _cause=e,
             )
@@ -112,7 +112,7 @@ class V6eType(ABC, t.Generic[T]):
             # Update value for next iteration
             value = parse_res.result
 
-        return ParseResult(result=value)
+        return V6eResult(result=value)
 
     @t.final
     def check(self, raw: t.Any) -> bool:
