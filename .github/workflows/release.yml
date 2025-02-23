@@ -1,15 +1,5 @@
 name: Release 🚀
-on:
-  pull_request:
-  push:
-    branches: ["master/*"]
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: Release Tag
-        required: true
-        default: dry-run
-        type: string
+on: push
 jobs:
   build:
     name: Build distribution 📦
