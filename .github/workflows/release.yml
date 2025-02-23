@@ -1,8 +1,6 @@
 name: Release 🚀
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
 jobs:

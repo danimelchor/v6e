@@ -1,5 +1,10 @@
 name: CI 👀
-on: push
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
 jobs:
   all-checks:
     name: All checks
@@ -23,4 +28,4 @@ jobs:
         run: uvx ruff check .
 
       - name: "Python type checking"
-        run: uvx pyright .
+        run: uvx pyright v6e
