@@ -29,3 +29,10 @@ dev = [
 minversion = "8.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
+
+
+[tool.pyright]
+exclude = [
+    "**/__pycache__",
+]
+reportMissingTypeStubs = false

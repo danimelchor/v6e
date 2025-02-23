@@ -3,6 +3,7 @@ import typing as t
 from typing_extensions import override
 
 from v6e.types.base import V6eType
+from v6e.types.utils import parser
 
 TRUE_BOOL_STR_LITERALS: set[str] = {"true", "yes", "y"}
 FALSE_BOOL_STR_LITERALS: set[str] = {"false", "no", "n"}
@@ -35,16 +36,12 @@ class BoolType(V6eType[bool]):
 
         return raw
 
-    def is_true(self) -> t.Self:
-        return self._chain(
-            "is_true()",
-            lambda x: x,
-            "Value {} must be greater true",
-        )
+    @parser
+    def is_true(self, value: bool):
+        if not value:
+            raise ValueError(f"Value {value} is not True")
 
-    def is_false(self) -> t.Self:
-        return self._chain(
-            "is_false()",
-            lambda x: not x,
-            "Value {} must be greater true",
-        )
+    @parser
+    def is_false(self: t.Self, value: bool):
+        if value:
+            raise ValueError(f"Value {value} is not False")

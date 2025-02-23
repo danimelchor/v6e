@@ -32,3 +32,9 @@ __all__ = [
     "datetime",
     "timedelta",
 ]
+
+
+if __name__ == "__main__":
+    a = str().gt("a").uuid()
+    print(a)
+    a.parse("0123abcd-01ab-ab01-0a1b-0a1b2c3d4e5f")

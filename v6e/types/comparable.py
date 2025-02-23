@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing as t
 
 from v6e.types.base import V6eType
+from v6e.types.utils import parser
 
 
 class _Comparable(t.Protocol):
@@ -16,36 +17,44 @@ Comparable = t.TypeVar("Comparable", bound=_Comparable)
 
 
 class ComparableMixin(V6eType[Comparable]):
-    def gt(self, value: Comparable) -> t.Self:
-        return self._chain(
-            f"gt({value})",
-            lambda x: x > value,
-            f"Value {{}} must be greater than {value}",
-        )
+    @parser
+    def gt(self, value: Comparable, x: int):
+        if x > value:
+            raise ValueError(
+                f"Value {x} must be greater than {value}",
+            )
 
-    def gte(self, value: Comparable, *, _name: str = "gte") -> t.Self:
-        return self._chain(
-            f"{_name}({value})",
-            lambda x: x >= value,
-            f"Value {{}} must be greater than or equal to {value}",
-        )
+    @parser
+    def gte(self, value: Comparable, x: int):
+        if x >= value:
+            raise ValueError(
+                f"Value {x} must be greater than or equal to {value}",
+            )
 
-    def lt(self, value: Comparable) -> t.Self:
-        return self._chain(
-            f"lt({value})",
-            lambda x: x < value,
-            f"Value {{}} must less than {value}",
-        )
+    @parser
+    def lt(self, value: Comparable, x: int):
+        if x < value:
+            raise ValueError(
+                f"Value {x} must less than {value}",
+            )
 
-    def lte(self, value: Comparable, *, _name: str = "lte") -> t.Self:
-        return self._chain(
-            f"{_name}({value})",
-            lambda x: x <= value,
-            f"Value {{}} must less than or equal to {value}",
-        )
+    @parser
+    def lte(self, value: Comparable, x: int):
+        if x <= value:
+            raise ValueError(
+                f"Value {x} must less than or equal to {value}",
+            )
 
-    def min(self, value: Comparable) -> t.Self:
-        return self.gte(value, _name="min")
+    @parser
+    def min(self, value: Comparable, x: int):
+        if x >= value:
+            raise ValueError(
+                f"Value {x} must be greater than or equal to {value}",
+            )
 
-    def max(self, value: Comparable) -> t.Self:
-        return self.lte(value, _name="max")
+    @parser
+    def max(self, value: Comparable, x: int):
+        if x <= value:
+            raise ValueError(
+                f"Value {x} must less than or equal to {value}",
+            )
