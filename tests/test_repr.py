@@ -22,6 +22,10 @@ def _custom_fn(x: int) -> None:
             v.int().custom(_custom_fn),
             "v6e.int().custom(_custom_fn)",
         ),
+        (
+            v.int().gte(5) | v.str().contains("a"),
+            "v6e.int().gte(5) | v6e.str().contains('a')",
+        ),
     ],
 )
 def test_base_class_repr(validation, expected):

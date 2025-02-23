@@ -91,7 +91,7 @@ class V6eType(ABC, t.Generic[T]):
         cp._checks.append(Check(name, check))
         return cp
 
-    def _or(self, other: V6eType[C]) -> _Union[T, C]:
+    def __or__(self, other: V6eType[C]) -> _Union[T, C]:
         return _Union(self, other)
 
     @t.final
@@ -140,11 +140,15 @@ class _Union(V6eType[T | C]):
     def __init__(self, left: V6eType[T], right: V6eType[C]) -> None:
         super().__init__()
         self.left = left
-        self.rigth = right
+        self.right = right
 
     @override
     def parse_raw(self, raw: t.Any) -> T | C:
         try:
             return self.left.parse(raw)
         except ValidationException:
-            return self.rigth.parse(raw)
+            return self.right.parse(raw)
+
+    @override
+    def __repr__(self):
+        return f"{self.left} | {self.right}"

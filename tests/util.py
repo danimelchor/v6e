@@ -14,7 +14,7 @@ T = t.TypeVar("T")
 @t.final
 @dataclass
 class V6eTest(t.Generic[T]):
-    fn: v.V6eType[T] | list[v.V6eType[T]]
+    fn: list[v.V6eType[T]]
     success_args: list[t.Any] | None = None
     success_ret_values: list[T] | None = None
     failure_args: list[t.Any] | None = None
@@ -42,7 +42,7 @@ class V6eTest(t.Generic[T]):
 @dataclass
 class V6eCase(t.Generic[T]):
     fn: v.V6eType[T]
-    arg: list[t.Any] | None = None
+    arg: t.Any | None = None
     ret_value: T | None = None
     fails: bool = False
     exc: t.Type[Exception] = v.ValidationException

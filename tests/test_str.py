@@ -12,7 +12,7 @@ from tests.util import (
 all_test_cases = generate_tests(
     # ----- Running the parsing logic -----
     V6eTest(
-        fn=v.str(),
+        fn=[v.str()],
         success_args=["a"],
         failure_args=[1, False, datetime.now(), timedelta()],
     ),
@@ -48,6 +48,7 @@ all_test_cases = generate_tests(
         success_args=["a", "abc", "cba"],
         failure_args=["cbd", "bc", ""],
     ),
+    # ----- Running string checks -----
     V6eTest(
         fn=[v.str().starts_with("a")],
         success_args=["a", "abc"],
@@ -58,7 +59,6 @@ all_test_cases = generate_tests(
         success_args=["a", "bca"],
         failure_args=["abcd", "bac", "ac"],
     ),
-    # ----- Running string checks -----
     V6eTest(
         fn=[v.str().regex(r"^[0-9a-z]+$")],
         success_args=["abc123", "123", "abc", "a"],

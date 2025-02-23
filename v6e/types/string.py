@@ -24,6 +24,20 @@ class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
         return raw
 
     @parser
+    def starts_with(self, value: str, x: str):
+        if not value.startswith(x):
+            raise ValueError(
+                f"{value} does not start with {x}",
+            )
+
+    @parser
+    def ends_with(self, value: str, x: str):
+        if not value.endswith(x):
+            raise ValueError(
+                f"{value} does not start with {x}",
+            )
+
+    @parser
     def regex(self, value: str, pattern: str):
         if re.search(pattern, value) is None:
             raise ValueError(

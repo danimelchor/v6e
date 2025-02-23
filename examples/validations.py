@@ -19,9 +19,10 @@ def print_title(x: str) -> None:
     print(BLUE + "\n" + x + DEFAULT)
 
 
-def print_example(prompt: str, result: bool) -> None:
+def print_example(parser: v.V6eType, value: t.Any) -> None:
+    result = parser.check(value)
     color = GREEN if result else RED
-    print(prompt, color + str(result) + DEFAULT)
+    print(f"Does {value!r} parse with {parser}? {color}{result}{DEFAULT}")
 
 
 # --- DEMO ---
@@ -29,66 +30,59 @@ def main() -> None:
     # Basic usage
     can_drink = v.int().gte(21)
     print_title("Basic - Age")
-    print_example("With age 21 can you drink?", can_drink.check(21))
-    print_example("With age 20 can you drink?", can_drink.check(20))
+    print_example(can_drink, 21)
+    print_example(can_drink, 20)
 
-    # You can "AND" multiple validations
+    # You can chain multiple checks
     interview_channel = v.str().starts_with("#").regex("interview.*[0-9]{2}-[0-9]{2}")
-    print_title("AND Validations - Slack Channel")
-    print_example(
-        "Is channel #interview-foo-feb-01-12 an interview slack channel?",
-        interview_channel.check("#interview-foo-feb-01-12"),
-    )
-    print_example(
-        "Is channel #foo-feb-01-12 an interview slack channel?",
-        interview_channel.check("#foo-feb-01-12"),
-    )
+    print_title("Chaining Parsers - Slack Channel")
+    print_example(interview_channel, "#interview-foo-feb-01-12")
+    print_example(interview_channel, "#foo-feb-01-12")
 
-    # You can create your own custom validations
+    # You can OR multiple parsers
+    union = v.str().starts_with("foo") | v.int().gte(5)
+    print_title("Union of parsers - foo or 5")
+    print_example(union, "foobar")
+    print_example(union, "1foo2")
+    print_example(union, 5)
+    print_example(union, 4)
+    print_example(union, None)
+
+    # You can create your own custom parsers
     def _validate_earth_age(x: int) -> None:
         if x != 4_543_000_000:
             raise ValueError("The Earth is 4.543 billion years old. Try 4543000000.")
 
     earth_age = v.int().custom(_validate_earth_age)
-    print_title("Custom Validation - Earth Age")
-    print_example(
-        "Is 4.543 billion years a valid Earth age?", earth_age.check(4_543_000_000)
-    )
-    print_example(
-        "Is 4.543 million years a valid Earth age?", earth_age.check(4_543_000)
-    )
+    print_title("Custom Parser - Earth Age")
+    print_example(earth_age, 4_543_000_000)
+    print_example(earth_age, 4_543_000)
 
-    # You can create your own reusable validation types or extend existing ones
+    # You can create your own reusable parser types or extend existing ones
     class SlackChannel(v.V6eStr):
         @override
         def parse_raw(self, raw: t.Any) -> str:
-            if not isinstance(raw, str):
-                raise ValueError(f"Value {raw!r} is not a valid slack channel")
-
-            if re.search("^#[a-z0-9-]$", raw) is None:
+            parsed: str = super().parse_raw(raw)
+            if re.search(r"^#[a-z0-9-]+$", parsed) is None:
                 raise v.ValidationException(
                     "Slack channels must start with '#' and contain only letters, numbers, and dashes"
                 )
 
-            return raw
+            return parsed
 
     foo_slack_channel = SlackChannel().contains("foo")
-    print_title("Reusable Validation Type - Slack Channel")
-    print_example(
-        "Is #foo-bar a valid slack channel?", foo_slack_channel.check("#foo-bar")
-    )
-    print_example(
-        "Is foo-bar a valid slack channel?", foo_slack_channel.check("foo-bar")
-    )
+    print_title("Reusable Parser Type - Slack Channel")
+    print_example(foo_slack_channel, "#foo-bar")
+    print_example(foo_slack_channel, "foo-bar")
 
     # Type checking example
     print_title("Type-checking example")
-    my_validation = v.int().gte(8).lte(4)
-    print(my_validation)
-    t.reveal_type(my_validation)
-    t.reveal_type(my_validation.check)
-    t.reveal_type(my_validation.safe_parse)
-    t.reveal_type(my_validation.parse)
+    my_parser = v.int().gte(8).lte(4)
+    print(my_parser)
+    t.reveal_type(my_parser)
+    t.reveal_type(my_parser.check)
+    t.reveal_type(my_parser.safe_parse)
+    t.reveal_type(my_parser.parse)
 
 
 if __name__ == "__main__":
