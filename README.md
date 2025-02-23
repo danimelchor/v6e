@@ -43,18 +43,30 @@ my_validation.parse("1foo2")  # Err -> Raises a ValidationException
 
 **Custom validations**
 ```python
+def _validate_earth_age(x: int) -> None:
+    if x != 4_543_000_000:
+        raise ValueError("The Earth is 4.543 billion years old. Try 4543000000.")
+
+earth_age = v.int().custom(_validate_earth_age)
+earth_age.parse(4_543_000_000)  # Ok -> Returns 4_543_000_000 (int)
+earth_age.parse("4543000000")  # Ok -> Returns 4_543_000_000 (int)
+earth_age.parse(1)  # Err -> Raises ValidationException
+```
+
+**Custom reusable types**
+```python
 class DivThree(v.IntType):
     @override
-    def _parse(self, raw: t.Any):
-        parsed: int = super()._parse(raw)
+    def parse_raw(self, raw: t.Any):
+        parsed: int = super().parse_raw(raw)
         if parsed % 3 != 0:
             raise ValueError(f"Woops! {parsed!r} is not divisible by three")
 
 
 my_validation = DivThree().gt(5)
-my_validation(6)  # Ok -> Returns 6
-my_validation(3)  # Err (not >5) -> Raises a ValidationException
-my_validation(7)  # Err (not div by 3) -> Raises a ValidationException
+my_validation.parse(6)  # Ok -> Returns 6
+my_validation.parse(3)  # Err (not >5) -> Raises a ValidationException
+my_validation.parse(7)  # Err (not div by 3) -> Raises a ValidationException
 ```
 
 ## 🐍 Type-checking
@@ -67,7 +79,7 @@ In this example your editor will correctly infer the type:
 my_validation = v.int().gte(8).lte(4)
 t.reveal_type(my_validation)  # Type of "my_validation" is "V6eInt"
 t.reveal_type(my_validation.check)  # Type of "my_validation.check" is "(raw: Any) -> bool"
-t.reveal_type(my_validation.safe_parse)  # Type of "my_validation" is "(raw: Any) -> ParseResult[int]"
+t.reveal_type(my_validation.safe_parse)  # Type of "my_validation" is "(raw: Any) -> V6eResult[int]"
 t.reveal_type(my_validation.parse)  # Type of "my_validation" is "(raw: Any) -> int"
 ```
 
