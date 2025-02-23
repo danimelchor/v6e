@@ -25,17 +25,17 @@ class StrType(ComparableMixin[str], SequenceMixin[str]):
 
     @parser
     def regex(self, value: str, pattern: str):
-        if re.search(pattern, value) is not None:
+        if re.search(pattern, value) is None:
             raise ValueError(
                 f"The string {value} did not match the pattern {pattern!r}"
             )
 
     @parser
     def email(self, value: str):
-        if EMAIL.match(value) is not None:
+        if EMAIL.match(value) is None:
             raise ValueError(f"The string {value} is not a valid email")
 
     @parser
     def uuid(self, value: str):
-        if UUID.match(value) is not None:
+        if UUID.match(value) is None:
             raise ValueError(f"The string {value} is not a valid uuid")

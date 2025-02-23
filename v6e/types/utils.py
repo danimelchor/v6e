@@ -10,10 +10,26 @@ X = t.TypeVar("X")
 V = t.TypeVar("V")
 P = t.ParamSpec("P")
 
+ParserFn: t.TypeAlias = t.Callable[t.Concatenate[T, V, P], V | None]
 
-def parser(wrapped_fun: t.Callable[t.Concatenate[T, V, P], None]):
+
+def _repr_fun(wrapped_fun: ParserFn[T, V, P], *args: P.args, **kwargs: P.kwargs):
+    repr = f"{wrapped_fun.__name__}"
+    if not args and not kwargs:
+        return repr
+
+    all_args_str = "".join(
+        [
+            *[str(a) for a in args],
+            *[f"{k}={v}" for k, v in kwargs.items()],
+        ]
+    )
+    return f"{repr}({all_args_str})"
+
+
+def parser(wrapped_fun: ParserFn[T, V, P]):
     def _impl(self: T, *args: P.args, **kwargs: P.kwargs) -> T:
-        repr = f"{wrapped_fun.__name__}"
+        repr = _repr_fun(wrapped_fun, *args, **kwargs)
 
         def _fn(value: V):
             try:

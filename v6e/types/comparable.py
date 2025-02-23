@@ -18,43 +18,43 @@ Comparable = t.TypeVar("Comparable", bound=_Comparable)
 
 class ComparableMixin(V6eType[Comparable]):
     @parser
-    def gt(self, value: Comparable, x: int):
-        if x > value:
+    def gt(self, value: Comparable, x: Comparable):
+        if value <= x:
             raise ValueError(
                 f"Value {x} must be greater than {value}",
             )
 
     @parser
-    def gte(self, value: Comparable, x: int):
-        if x >= value:
+    def gte(self, value: Comparable, x: Comparable):
+        if value < x:
             raise ValueError(
                 f"Value {x} must be greater than or equal to {value}",
             )
 
     @parser
-    def lt(self, value: Comparable, x: int):
-        if x < value:
+    def lt(self, value: Comparable, x: Comparable):
+        if value >= x:
             raise ValueError(
                 f"Value {x} must less than {value}",
             )
 
     @parser
-    def lte(self, value: Comparable, x: int):
-        if x <= value:
+    def lte(self, value: Comparable, x: Comparable):
+        if value > x:
             raise ValueError(
                 f"Value {x} must less than or equal to {value}",
             )
 
     @parser
-    def min(self, value: Comparable, x: int):
-        if x >= value:
+    def min(self, value: Comparable, x: Comparable):
+        if value < x:
             raise ValueError(
                 f"Value {x} must be greater than or equal to {value}",
             )
 
     @parser
-    def max(self, value: Comparable, x: int):
-        if x <= value:
+    def max(self, value: Comparable, x: Comparable):
+        if value > x:
             raise ValueError(
                 f"Value {x} must less than or equal to {value}",
             )

@@ -5,36 +5,45 @@ import typing as t
 from typing_extensions import override
 
 from v6e.types.comparable import ComparableMixin
+from v6e.types.utils import parser
 
 Numeric = t.TypeVar("Numeric", bound=int | float)
 
 
 class NumericMixin(ComparableMixin[Numeric]):
-    def positive(self) -> t.Self:
-        return self._chain("positive()", lambda x: x > 0, "Value {} must be positive")
+    @parser
+    def positive(self, value: Numeric):
+        if value <= 0:
+            raise ValueError("Value {} must be positive")
 
-    def nonpositive(self) -> t.Self:
-        return self._chain(
-            "nonpositive()", lambda x: x <= 0, "Value {} must not be positive"
-        )
+    @parser
+    def nonpositive(self, value: Numeric):
+        if value > 0:
+            raise ValueError("Value {} must not be positive")
 
-    def negative(self) -> t.Self:
-        return self._chain("negative()", lambda x: x < 0, "Value {} must be negative")
+    @parser
+    def negative(self, value: Numeric):
+        if value >= 0:
+            raise ValueError("Value {} must be negative")
 
-    def nonnegative(self) -> t.Self:
-        return self._chain(
-            "nonnegative()", lambda x: x >= 0, "Value {} must not be negative"
-        )
+    @parser
+    def nonnegative(self, value: Numeric):
+        if value < 0:
+            raise ValueError("Value {} must not be negative")
 
-    def multiple_of(self, value: Numeric, *, _name="multiple_of") -> t.Self:
-        return self._chain(
-            f"{_name}({value})",
-            lambda x: x % value == 0,
-            f"Value {{}} must be a multiple of {value}",
-        )
+    @parser
+    def multiple_of(self, value: Numeric, x: Numeric):
+        if value % x != 0:
+            raise ValueError(
+                f"Value {value} must be a multiple of {x}",
+            )
 
-    def step(self, value: Numeric) -> t.Self:
-        return self.multiple_of(value, _name="step")
+    @parser
+    def step(self, value: Numeric, x: Numeric):
+        if value % x != 0:
+            raise ValueError(
+                f"Value {value} must be a multiple of {x}",
+            )
 
 
 class IntType(NumericMixin[int]):
