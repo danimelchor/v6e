@@ -2,8 +2,7 @@ import typing as t
 
 from typing_extensions import override
 
-from v6e.types.base import V6eType
-from v6e.types.utils import parser
+from v6e.types.base import V6eType, parser
 
 TRUE_BOOL_STR_LITERALS: set[str] = {"true", "yes", "y"}
 FALSE_BOOL_STR_LITERALS: set[str] = {"false", "no", "n"}
@@ -11,7 +10,7 @@ FALSE_BOOL_STR_LITERALS: set[str] = {"false", "no", "n"}
 
 class V6eBool(V6eType[bool]):
     @override
-    def _parse(self, raw):
+    def parse_raw(self, raw):
         if isinstance(raw, str):
             raw_lower = raw.lower()
             if (

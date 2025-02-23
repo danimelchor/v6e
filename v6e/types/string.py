@@ -2,9 +2,9 @@ import re
 
 from typing_extensions import override
 
+from v6e.types.base import parser
 from v6e.types.comparable import V6eComparableMixin
 from v6e.types.sequences import V6eSequenceMixin
-from v6e.types.utils import parser
 
 EMAIL = re.compile(
     r"^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$",
@@ -18,7 +18,7 @@ UUID = re.compile(
 
 class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
     @override
-    def _parse(self, raw):
+    def parse_raw(self, raw):
         if not isinstance(raw, str):
             raise ValueError(f"The value {raw!r} is not a valid string.")
         return raw

@@ -2,45 +2,43 @@ from __future__ import annotations
 
 import typing as t
 
-from v6e.exceptions import ValidationException
-from v6e.types.base import ParseResult, V6eType
+from v6e.types.base import ParserFn, V6eTypeType
 
-V = t.TypeVar("V")
-T = t.TypeVar("T", bound=V6eType)
 P = t.ParamSpec("P")
+T = t.TypeVar("T")
 
-ParserFn: t.TypeAlias = t.Callable[t.Concatenate[T, V, P], V | None]
 
-
-def _repr_fun(wrapped_fun: ParserFn[T, V, P], *args: P.args, **kwargs: P.kwargs):
-    repr = f"{wrapped_fun.__name__}"
+def repr_fun(fn: ParserFn[V6eTypeType, T, P], *args: P.args, **kwargs: P.kwargs):
+    repr = f"{fn.__name__}"
     if not args and not kwargs:
         return repr
 
+    def _arg_to_str(arg: t.Any):
+        if isinstance(arg, t.Callable):
+            return arg.__name__
+        return f"{arg!r}"
+
     all_args_str = "".join(
         [
-            *[str(a) for a in args],
-            *[f"{k}={v}" for k, v in kwargs.items()],
+            *map(_arg_to_str, args),
+            *[f"{k}={_arg_to_str(v)}" for k, v in kwargs.items()],
         ]
     )
     return f"{repr}({all_args_str})"
 
 
-def parser(wrapped_fun: ParserFn[T, V, P]):
-    def _impl(self: T, *args: P.args, **kwargs: P.kwargs) -> T:
-        repr = _repr_fun(wrapped_fun, *args, **kwargs)
+def alias(cls: type[V6eTypeType], name: str) -> t.Callable[[], V6eTypeType]:
+    """
+    Utility to alias a V6eType with a different name
+    so that they're represented differently. For example:
+    ```python
+    print(V6eBool().gt(5))  # v6e.V6eBool().gt(5)
+    bool = alias(V6eBool, "bool")
+    print(bool().gt(5))  # v6e.bool().gt(5)
+    ```
+    """
 
-        def _fn(value: V):
-            try:
-                res = wrapped_fun(self, value, *args, **kwargs)
-            except (ValueError, TypeError, ValidationException) as e:
-                return ParseResult(error_message=str(e))
+    def inner():
+        return cls(alias=name)
 
-            return ParseResult(
-                result=value if res is None else res,
-            )
-
-        self._chain(repr, _fn)
-        return self
-
-    return _impl
+    return inner
