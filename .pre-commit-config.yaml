@@ -20,12 +20,18 @@ repos:
           - -r
           - src
 
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.6.2
+    hooks:
+      - id: uv-lock
+
   - repo: local
     hooks:
     # Run tests
     - id: pytest
       name: pytest
-      entry: uv run --active pytest
+      entry: uv run pytest tests
       language: python
       types: [python]
       files: ^tests/.*
@@ -37,7 +43,7 @@ repos:
     - id: ruff-format
       name: Run 'ruff format'
       description: "Run 'ruff format' for extremely fast Python formatting"
-      entry: ruff format --force-exclude
+      entry: uvx ruff format --force-exclude
       language: python
       types_or: [python, pyi]
       exclude: ^tests/.*
@@ -48,7 +54,7 @@ repos:
     - id: ruff
       name: Run 'ruff' for extremely fast Python linting
       description: "Run 'ruff' for extremely fast Python linting"
-      entry: ruff check --force-exclude
+      entry: uvx ruff check --force-exclude
       language: python
       types_or: [python, pyi]
       args: [--fix]
