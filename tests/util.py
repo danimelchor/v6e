@@ -16,29 +16,26 @@ T = t.TypeVar("T")
 class V6eTest(t.Generic[T]):
     fn: v.V6eType[T] | list[v.V6eType[T]]
     success_args: list[t.Any] | None = None
+    success_ret_values: list[T] | None = None
     failure_args: list[t.Any] | None = None
     exc: t.Type[Exception] = v.ValidationException
+
+    def __post_init__(self):
+        if self.success_args and self.success_ret_values:
+            assert len(self.success_args) == len(self.success_ret_values)
 
     def iter_cases(self) -> t.Generator[V6eCase, None, None]:
         fns = self.fn if isinstance(self.fn, list) else [self.fn]
 
         if self.success_args is not None:
-            args = self.success_args or [None]
-            for arg, fn in product(args, fns):
-                yield V6eCase(
-                    fn=fn,
-                    arg=arg,
-                )
+            ret_values = self.success_ret_values or [None] * len(self.success_args)
+            args_with_ret = zip(self.success_args, ret_values)
+            for (arg, ret), fn in product(args_with_ret, fns):
+                yield V6eCase(fn=fn, arg=arg, ret_value=ret)
 
         if self.failure_args is not None:
-            args = self.failure_args or [None]
-            for arg, fn in product(args, fns):
-                yield V6eCase(
-                    fn=fn,
-                    arg=arg,
-                    fails=True,
-                    exc=self.exc,
-                )
+            for arg, fn in product(self.failure_args, fns):
+                yield V6eCase(fn=fn, arg=arg, fails=True, exc=self.exc)
 
 
 @t.final
@@ -46,6 +43,7 @@ class V6eTest(t.Generic[T]):
 class V6eCase(t.Generic[T]):
     fn: v.V6eType[T]
     arg: list[t.Any] | None = None
+    ret_value: T | None = None
     fails: bool = False
     exc: t.Type[Exception] = v.ValidationException
 
@@ -64,6 +62,12 @@ class V6eCase(t.Generic[T]):
         if self.fails and parse_res.is_ok():
             raise AssertionError(
                 f"{self.fn} for {self.arg!a} was expected fail but it did not"
+            )
+
+        if self.ret_value and parse_res.result != self.ret_value:
+            raise AssertionError(
+                f"{self.fn} for {self.arg!a} was expected to return {self.ret_value!r} but"
+                + f" it instead returned {parse_res.result!r}",
             )
 
 

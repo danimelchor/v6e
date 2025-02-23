@@ -7,9 +7,12 @@ from copy import copy
 from typing_extensions import override
 
 from v6e.exceptions import ValidationException
+from v6e.types import utils
 
 T = t.TypeVar("T")
 C = t.TypeVar("C")
+P = t.ParamSpec("P")
+V6eTypeType = t.TypeVar("V6eTypeType", bound="V6eType")
 
 
 class ParseResult(t.Generic[T]):
@@ -44,7 +47,7 @@ class ParseResult(t.Generic[T]):
         return exc
 
 
-CheckFn = t.Callable[[T], ParseResult]
+CheckFn: t.TypeAlias = t.Callable[[T], ParseResult]
 
 
 class Check(t.NamedTuple, t.Generic[T]):
@@ -52,13 +55,39 @@ class Check(t.NamedTuple, t.Generic[T]):
     check: CheckFn[T]
 
 
+ParserFn: t.TypeAlias = t.Callable[t.Concatenate[V6eTypeType, T, P], T | None]
+
+
+def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
+    def _impl(self: V6eTypeType, *args: P.args, **kwargs: P.kwargs) -> V6eTypeType:
+        repr = utils.repr_fun(wrapped_fun, *args, **kwargs)
+
+        def _fn(value: T):
+            try:
+                res = wrapped_fun(self, value, *args, **kwargs)
+            except (ValueError, TypeError, ValidationException) as e:
+                return ParseResult(error_message=str(e))
+
+            return ParseResult(
+                result=value if res is None else res,
+            )
+
+        self._chain(repr, _fn)
+        return self
+
+    return _impl
+
+
 class V6eType(ABC, t.Generic[T]):
-    def __init__(self) -> None:
+    def __init__(self, alias: str | None = None) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
+        self._alias = alias
+
+    @abstractmethod
+    def parse_raw(self, raw: t.Any) -> T: ...
 
     def _chain(self, name: str, check: CheckFn[T]) -> t.Self:
-        print(name)
         cp = copy(self)
         cp._checks.append(Check(name, check))
         return cp
@@ -66,13 +95,10 @@ class V6eType(ABC, t.Generic[T]):
     def _or(self, other: V6eType[C]) -> _Union[T, C]:
         return _Union(self, other)
 
-    @abstractmethod
-    def _parse(self, raw: t.Any) -> T: ...
-
     @t.final
     def safe_parse(self, raw: t.Any) -> ParseResult[T]:
         try:
-            value = self._parse(raw)
+            value = self.parse_raw(raw)
         except Exception as e:
             return ParseResult(
                 error_message=f"Failed to parse {raw} as {self}",
@@ -100,10 +126,15 @@ class V6eType(ABC, t.Generic[T]):
             raise parse_res.get_exception()
         return parse_res.result
 
+    @parser
+    def custom(self, value: T, fn: t.Callable[[T], T | None]) -> T | None:
+        return fn(value)
+
     @override
     def __repr__(self):
+        name = self._alias or self.__class__.__name__
         checks = "".join(f".{c.name}" for c in self._checks)
-        return f"{self.__class__.__name__}{checks}"
+        return f"v6e.{name}(){checks}"
 
 
 class _Union(V6eType[T | C]):
@@ -113,7 +144,7 @@ class _Union(V6eType[T | C]):
         self.rigth = right
 
     @override
-    def _parse(self, raw: t.Any) -> T | C:
+    def parse_raw(self, raw: t.Any) -> T | C:
         try:
             return self.left.parse(raw)
         except ValidationException:

@@ -51,13 +51,17 @@ def main() -> None:
 
     earth_age = v.int().custom(_validate_earth_age)
     print_title("Custom Validation - Earth Age")
-    print_example("Is 4.543 billion years a valid Earth age?", earth_age(4_543_000_000))
-    print_example("Is 4.543 million years a valid Earth age?", earth_age(4_543_000))
+    print_example(
+        "Is 4.543 billion years a valid Earth age?", earth_age.check(4_543_000_000)
+    )
+    print_example(
+        "Is 4.543 million years a valid Earth age?", earth_age.check(4_543_000)
+    )
 
     # You can create your own reusable validation types or extend existing ones
     class SlackChannel(v.V6eStr):
         @override
-        def _parse(self, raw: t.Any) -> str:
+        def parse_raw(self, raw: t.Any) -> str:
             if not isinstance(raw, str):
                 raise ValueError(f"Value {raw!r} is not a valid slack channel")
 
@@ -78,7 +82,9 @@ def main() -> None:
     )
 
     # Type checking example
+    print_title("Type-checking example")
     my_validation = v.int().gte(8).lte(4)
+    print(my_validation)
     t.reveal_type(my_validation)
     t.reveal_type(my_validation.check)
     t.reveal_type(my_validation.safe_parse)
