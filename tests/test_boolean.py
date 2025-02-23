@@ -13,7 +13,7 @@ from v6e.types.boolean import FALSE_BOOL_STR_LITERALS, TRUE_BOOL_STR_LITERALS
 all_test_cases = generate_tests(
     # ----- Running the parsing logic -----
     V6eTest(
-        fn=v.bool(),
+        fn=[v.bool()],
         success_args=[
             True,
             False,
@@ -26,12 +26,12 @@ all_test_cases = generate_tests(
     ),
     # ----- Running all possible checks -----
     V6eTest(
-        fn=v.bool().is_true(),
+        fn=[v.bool().is_true()],
         success_args=[True, 1, *TRUE_BOOL_STR_LITERALS],
         failure_args=[False, 0, *FALSE_BOOL_STR_LITERALS],
     ),
     V6eTest(
-        fn=v.bool().is_false(),
+        fn=[v.bool().is_false()],
         success_args=[False, 0, *FALSE_BOOL_STR_LITERALS],
         failure_args=[True, 1, *TRUE_BOOL_STR_LITERALS],
     ),

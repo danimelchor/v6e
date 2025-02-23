@@ -21,17 +21,3 @@ class V6eSequenceMixin(V6eType[T]):
             raise ValueError(
                 f"{value} does not contain {x}",
             )
-
-    @parser
-    def starts_with(self, value: T, x: T):
-        if value[0] != x:
-            raise ValueError(
-                f"{value} does not start with {x}",
-            )
-
-    @parser
-    def ends_with(self, value: T, x: T):
-        if value[-1] != x:
-            raise ValueError(
-                f"{value} does not start with {x}",
-            )

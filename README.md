@@ -33,12 +33,25 @@ my_validation.parse("21")  # Ok -> Returns 21 (int)
 my_validation.parse(54)  # Err -> Raises a ValidationException
 ```
 
-**Chaing your validations and transformations**
+**Chaining your validations and transformations**
 ```python
 my_validation = v.str().trim().starts_with("foo").ends_with("foo").regex(r"^[a-z0-9]*$")
 my_validation.parse("  foo12")  # Ok -> Returns 'foo12' (str)
 my_validation.parse("12foo  ")  # Ok -> Returns '12foo' (str)
 my_validation.parse("1foo2")  # Err -> Raises a ValidationException
+```
+
+**Handling multiple possible types**
+```python
+union = v.str().starts_with("foo") | v.int().gte(5)
+
+union.parse("foobar")  # Ok -> Returns 'foobar' (str)
+union.parse("1foo2")  # Err -> Raises a ValidationException
+
+union.parse(5)  # Ok -> Returns 5 (int)
+union.parse(3)  # Err -> Raises a ValidationException
+
+union.parse(None)  # Err -> Raises a ValidationException
 ```
 
 **Custom validations**
