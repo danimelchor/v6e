@@ -52,16 +52,7 @@ class Check(t.NamedTuple, t.Generic[T]):
     check: CheckFn[T]
 
 
-class V6eTypeType(t.Protocol[T]):
-    def _chain(self: t.Self, name: str, check: CheckFn[T]) -> t.Self: ...
-    def _or(self: t.Self, other: V6eType[C]) -> _Union[T, C]: ...
-    def _parse(self: t.Self, raw: t.Any) -> T: ...
-    def safe_parse(self: t.Self, raw: t.Any) -> ParseResult: ...
-    def check(self: t.Self, raw: t.Any) -> bool: ...
-    def parse(self: t.Self, raw: t.Any) -> T: ...
-
-
-class V6eType(ABC, V6eTypeType[T]):
+class V6eType(ABC, t.Generic[T]):
     def __init__(self) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
@@ -79,7 +70,7 @@ class V6eType(ABC, V6eTypeType[T]):
     def _parse(self, raw: t.Any) -> T: ...
 
     @t.final
-    def safe_parse(self, raw: t.Any) -> ParseResult:
+    def safe_parse(self, raw: t.Any) -> ParseResult[T]:
         try:
             value = self._parse(raw)
         except Exception as e:

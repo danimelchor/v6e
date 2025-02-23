@@ -3,11 +3,10 @@ from __future__ import annotations
 import typing as t
 
 from v6e.exceptions import ValidationException
-from v6e.types.base import ParseResult, V6eTypeType
+from v6e.types.base import ParseResult, V6eType
 
-T = t.TypeVar("T", bound=V6eTypeType)
-X = t.TypeVar("X")
 V = t.TypeVar("V")
+T = t.TypeVar("T", bound=V6eType)
 P = t.ParamSpec("P")
 
 ParserFn: t.TypeAlias = t.Callable[t.Concatenate[T, V, P], V | None]
