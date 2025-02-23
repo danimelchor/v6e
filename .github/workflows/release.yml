@@ -1,0 +1,52 @@
+name: Release 🚀
+permissions:
+  contents: "write"
+
+on:
+  pull_request:
+  push:
+    branches: ["master/*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release Tag
+        required: true
+        default: dry-run
+        type: string
+jobs:
+  build:
+    name: Build distribution 📦
+    runs-on: ubuntu-latest
+    environment:
+      name: build
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Install UV
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+    - name: Build wheels
+      run: uv build -o dist/
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  pypi-publish:
+    name: Publish to PyPI 🐍
+    runs-on: ubuntu-latest
+    needs:
+    - build
+    permissions:
+      id-token: write
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Install UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Publish to PyPi
+        run: uv publish -v dist/*
