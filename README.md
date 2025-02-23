@@ -18,38 +18,43 @@ uv run examples/validations.py
 
 **Basic validations**
 ```python
-import v6e
+import v6e as v
 
-my_validation = v6e.Range(18, 21)
+my_validation = v.int().gte(18).lte(21)
 
-# Using it like a function
-my_validation(18)  # True
-my_validation(21)  # True
-my_validation(54)  # False
+# Use it only to check if the value conforms
+my_validation.check(18)  # True
+my_validation.check(21)  # True
+my_validation.check(54)  # False
 
-# .ensure(...)
-my_validation.ensure(21)  # Nothing happens -> continue to next line
-my_validation.ensure(54)  # Raises a ValidationException
+# Use `.parse()` to validate and get the parsed value
+my_validation.parse(21)  # Ok -> Returns 21 (int)
+my_validation.parse("21")  # Ok -> Returns 21 (int)
+my_validation.parse(54)  # Err -> Raises a ValidationException
 ```
 
-**`AND` and `OR` validations**
+**Chaing your validations and transformations**
 ```python
-my_validation = (v6e.StartsWith("foo") | v6e.EndsWith("foo")) & v6e.ReMatch(r"^[a-z0-9]*$")
-my_validation("foo12")  # True
-my_validation("12foo")  # True
-my_validation("1foo2")  # False
+my_validation = v.str().trim().starts_with("foo").ends_with("foo").regex(r"^[a-z0-9]*$")
+my_validation.parse("  foo12")  # Ok -> Returns 'foo12' (str)
+my_validation.parse("12foo  ")  # Ok -> Returns '12foo' (str)
+my_validation.parse("1foo2")  # Err -> Raises a ValidationException
 ```
 
 **Custom validations**
 ```python
-def is_div_three(x: int):
-    if x % 3 != 0:
-        raise ValueError("Woops! The Earth is 4.543 billion years old. (Try 4543000000)")
+class DivThree(v.IntType):
+    @override
+    def _parse(self, raw: t.Any):
+        parsed: int = super()._parse(raw)
+        if parsed % 3 != 0:
+            raise ValueError(f"Woops! {parsed!r} is not divisible by three")
 
-my_validation = v6e.Custom(is_div_three)
-my_validation(3)  # True
-my_validation(6)  # True
-my_validation(4)  # False
+
+my_validation = DivThree().gt(5)
+my_validation(6)  # Ok -> Returns 6
+my_validation(3)  # Err (not >5) -> Raises a ValidationException
+my_validation(7)  # Err (not div by 3) -> Raises a ValidationException
 ```
 
 ## 🐍 Type-checking
@@ -59,8 +64,11 @@ from the arguments you pass in.
 
 In this example your editor will correctly infer the type:
 ```python
-my_validation = v6e.Choices([2,3]) | v6e.Range(1, 4)
-reveal_type(my_validation)  # Type of "res" is "_Union[int]" (compatible with "Callable[[int], None]")
+my_validation = v.int().gte(8).lte(4)
+t.reveal_type(my_validation)  # Type of "my_validation" is "IntType"
+t.reveal_type(my_validation.check)  # Type of "my_validation.check" is "(raw: Any) -> bool"
+t.reveal_type(my_validation.safe_parse)  # Type of "my_validation" is "(raw: Any) -> ParseResult[int]"
+t.reveal_type(my_validation.parse)  # Type of "my_validation" is "(raw: Any) -> int"
 ```
 
 ## Why do I care?
