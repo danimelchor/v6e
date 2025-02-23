@@ -55,7 +55,7 @@ def main() -> None:
     print_example("Is 4.543 million years a valid Earth age?", earth_age(4_543_000))
 
     # You can create your own reusable validation types or extend existing ones
-    class SlackChannel(v.V6eStrType):
+    class SlackChannel(v.V6eStr):
         @override
         def _parse(self, raw: t.Any) -> str:
             if not isinstance(raw, str):
