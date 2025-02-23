@@ -16,7 +16,7 @@ class _Comparable(t.Protocol):
 Comparable = t.TypeVar("Comparable", bound=_Comparable)
 
 
-class ComparableMixin(V6eType[Comparable]):
+class V6eComparableMixin(V6eType[Comparable]):
     @parser
     def gt(self, value: Comparable, x: Comparable):
         if value <= x:

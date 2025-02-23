@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 from v6e.types.base import V6eType
 
 
-class DateTimeType(V6eType[datetime]):
+class V6eDateTime(V6eType[datetime]):
     pass
 
 
-class TimeDeltaType(V6eType[timedelta]):
+class V6eTimeDelta(V6eType[timedelta]):
     pass
