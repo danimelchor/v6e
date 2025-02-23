@@ -1,29 +1,25 @@
 from v6e.exceptions import ValidationException
-from v6e.types import base, boolean, calendar, numbers, string
+from v6e.types.base import V6eType
+from v6e.types.boolean import V6eBool
+from v6e.types.calendar import V6eDateTime, V6eTimeDelta
+from v6e.types.numbers import V6eFloat, V6eInt
+from v6e.types.string import V6eStr
 
-V6eType = base.V6eType
-
-V6eBooleanType = boolean.BoolType
-V6eIntType = numbers.IntType
-V6eFloatType = numbers.FloatType
-V6eStrType = string.StrType
-V6eDateTimeType = calendar.DateTimeType
-V6eTimeDeltaType = calendar.TimeDeltaType
-
-bool = boolean.BoolType
-int = numbers.IntType
-float = numbers.FloatType
-str = string.StrType
-datetime = calendar.DateTimeType
-timedelta = calendar.TimeDeltaType
+bool = V6eBool
+int = V6eInt
+float = V6eFloat
+str = V6eStr
+datetime = V6eDateTime
+timedelta = V6eTimeDelta
 
 __all__ = [
-    "V6eBooleanType",
-    "V6eIntType",
-    "V6eFloatType",
-    "V6eStrType",
-    "V6eDateTimeType",
-    "V6eTimeDeltaType",
+    "V6eType",
+    "V6eBool",
+    "V6eInt",
+    "V6eFloat",
+    "V6eStr",
+    "V6eDateTime",
+    "V6eTimeDelta",
     "ValidationException",
     "bool",
     "int",
@@ -32,9 +28,3 @@ __all__ = [
     "datetime",
     "timedelta",
 ]
-
-
-if __name__ == "__main__":
-    a = str().gt("a").uuid()
-    print(a)
-    a.parse("0123abcd-01ab-ab01-0a1b-0a1b2c3d4e5f")

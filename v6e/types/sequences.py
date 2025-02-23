@@ -8,7 +8,7 @@ from v6e.types.utils import parser
 T = t.TypeVar("T", bound=t.Sequence)
 
 
-class SequenceMixin(V6eType[T]):
+class V6eSequenceMixin(V6eType[T]):
     @parser
     def length(self, value: T, x: int):
         if len(value) != x:

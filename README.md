@@ -65,7 +65,7 @@ from the arguments you pass in.
 In this example your editor will correctly infer the type:
 ```python
 my_validation = v.int().gte(8).lte(4)
-t.reveal_type(my_validation)  # Type of "my_validation" is "IntType"
+t.reveal_type(my_validation)  # Type of "my_validation" is "V6eInt"
 t.reveal_type(my_validation.check)  # Type of "my_validation.check" is "(raw: Any) -> bool"
 t.reveal_type(my_validation.safe_parse)  # Type of "my_validation" is "(raw: Any) -> ParseResult[int]"
 t.reveal_type(my_validation.parse)  # Type of "my_validation" is "(raw: Any) -> int"

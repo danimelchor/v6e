@@ -4,13 +4,13 @@ import typing as t
 
 from typing_extensions import override
 
-from v6e.types.comparable import ComparableMixin
+from v6e.types.comparable import V6eComparableMixin
 from v6e.types.utils import parser
 
 Numeric = t.TypeVar("Numeric", bound=int | float)
 
 
-class NumericMixin(ComparableMixin[Numeric]):
+class V6eNumericMixin(V6eComparableMixin[Numeric]):
     @parser
     def positive(self, value: Numeric):
         if value <= 0:
@@ -46,7 +46,7 @@ class NumericMixin(ComparableMixin[Numeric]):
             )
 
 
-class IntType(NumericMixin[int]):
+class V6eInt(V6eNumericMixin[int]):
     @override
     def _parse(self, raw):
         value = int(raw)
@@ -55,7 +55,7 @@ class IntType(NumericMixin[int]):
         return value
 
 
-class FloatType(NumericMixin[float]):
+class V6eFloat(V6eNumericMixin[float]):
     @override
     def _parse(self, raw):
         return float(raw)
