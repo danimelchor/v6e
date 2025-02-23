@@ -13,10 +13,15 @@ def repr_fun(fn: ParserFn[V6eTypeType, T, P], *args: P.args, **kwargs: P.kwargs)
     if not args and not kwargs:
         return repr
 
+    def _arg_to_str(arg: t.Any):
+        if isinstance(arg, t.Callable):
+            return arg.__name__
+        return f"{arg!r}"
+
     all_args_str = "".join(
         [
-            *[f"{a!r}" for a in args],
-            *[f"{k}={v!r}" for k, v in kwargs.items()],
+            *map(_arg_to_str, args),
+            *[f"{k}={_arg_to_str(v)}" for k, v in kwargs.items()],
         ]
     )
     return f"{repr}({all_args_str})"

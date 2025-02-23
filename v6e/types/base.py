@@ -60,8 +60,6 @@ ParserFn: t.TypeAlias = t.Callable[t.Concatenate[V6eTypeType, T, P], T | None]
 
 def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
     def _impl(self: V6eTypeType, *args: P.args, **kwargs: P.kwargs) -> V6eTypeType:
-        repr = utils.repr_fun(wrapped_fun, *args, **kwargs)
-
         def _fn(value: T):
             try:
                 res = wrapped_fun(self, value, *args, **kwargs)
@@ -72,6 +70,7 @@ def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
                 result=value if res is None else res,
             )
 
+        repr = utils.repr_fun(wrapped_fun, *args, **kwargs)
         self._chain(repr, _fn)
         return self
 
