@@ -64,7 +64,7 @@ def main() -> None:
         def parse_raw(self, raw: t.Any) -> str:
             parsed: str = super().parse_raw(raw)
             if re.search(r"^#[a-z0-9-]+$", parsed) is None:
-                raise v.ValidationException(
+                raise v.ParseException(
                     "Slack channels must start with '#' and contain only letters, numbers, and dashes"
                 )
 

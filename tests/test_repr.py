@@ -8,7 +8,7 @@ def _custom_fn(x: int) -> None:
 
 
 @mark.parametrize(
-    "validation,expected",
+    "parser,expected",
     [
         (
             v.V6eInt().gte(5).lt(15).multiple_of(5),
@@ -28,5 +28,5 @@ def _custom_fn(x: int) -> None:
         ),
     ],
 )
-def test_base_class_repr(validation, expected):
-    assert str(validation) == expected
+def test_base_class_repr(parser, expected):
+    assert str(parser) == expected

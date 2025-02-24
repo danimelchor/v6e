@@ -4,16 +4,16 @@ build-backend = "hatchling.build"
 
 [project]
 name = "v6e"
-description = "A simple, type-safe, and extensible Python validations framework"
+description = "A simple, type-safe, and extensible Python parsing and validation framework"
 readme = "README.md"
-version = "0.1.8"
+version = "0.1.9"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 requires-python = "~=3.11,<3.13"
 authors = [
   {name = "Daniel Melchor", email = "dmelchor@pm.me"},
 ]
-keywords = ["validation", "validate", "data", "check"]
+keywords = ["validation", "validate", "parser", "data", "check"]
 dependencies = [
     "python-dateutil>=2.9.0",
     "typing-extensions>=4.12.2",
@@ -37,9 +37,11 @@ minversion = "8.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
 
-
 [tool.pyright]
 exclude = [
     "**/__pycache__",
 ]
 reportMissingTypeStubs = false
+
+[tool.bandit]
+skips = ["B101"]

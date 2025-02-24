@@ -1,4 +1,4 @@
-from v6e.exceptions import ValidationException
+from v6e.exceptions import ParseException
 from v6e.types import utils
 from v6e.types.base import V6eType
 from v6e.types.boolean import V6eBool
@@ -21,7 +21,7 @@ __all__ = [
     "V6eStr",
     "V6eDateTime",
     "V6eTimeDelta",
-    "ValidationException",
+    "ParseException",
     "bool",
     "int",
     "float",

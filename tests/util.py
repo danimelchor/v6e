@@ -18,7 +18,7 @@ class V6eTest(t.Generic[T]):
     success_args: list[t.Any] | None = None
     success_ret_values: list[T] | None = None
     failure_args: list[t.Any] | None = None
-    exc: t.Type[Exception] = v.ValidationException
+    exc: t.Type[Exception] = v.ParseException
 
     def __post_init__(self):
         if self.success_args and self.success_ret_values:
@@ -45,7 +45,7 @@ class V6eCase(t.Generic[T]):
     arg: t.Any | None = None
     ret_value: T | None = None
     fails: bool = False
-    exc: t.Type[Exception] = v.ValidationException
+    exc: t.Type[Exception] = v.ParseException
 
     def __repr__(self) -> str:
         result = "fails" if self.fails else "succeeds"
