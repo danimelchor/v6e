@@ -1,4 +1,4 @@
-# 🔍 V6E
+# 🔍 v6e
 
 [![PyPI version](https://badge.fury.io/py/v6e.svg)](https://badge.fury.io/py/v6e)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit)
@@ -11,14 +11,6 @@ A simple, type-safe, and extensible Python parsing and validation framework
 ### Why the name?
 
 `v6e` comes from the [numeronym](https://en.m.wikipedia.org/wiki/Numeronym) of "validate".
-
-### Examples
-
-Check out the examples in `./examples`! You can run them locally with:
-
-```
-uv run examples/parsers.py
-```
 
 ## Usage
 
@@ -40,6 +32,14 @@ my_parser.parse(54)  # Err -> Raises a ParseException
 
 `v6e` also supports [custom parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-parsers), [custom reusable types](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), [unions of parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), and more. See more in our [docs](https://github.com/danimelchor/v6e/tree/master/docs/index.md)!
 
+## Examples
+
+Check out the examples in `./examples`! You can run them locally with:
+
+```
+uv run examples/parsers.py
+```
+
 ## 🐍 Type-checking
 
 This library is fully type-checked. This means that all types will be correctly inferred
@@ -54,7 +54,7 @@ t.reveal_type(my_parser.safe_parse)  # Type of "my_parser" is "(raw: Any) -> V6e
 t.reveal_type(my_parser.parse)  # Type of "my_parser" is "(raw: Any) -> int"
 ```
 
-## Why do I care?
+## Why should I care?
 
 Type checking will help you catch issues way earlier in the development cycle. It will also
 provide nice autocomplete features in your editor that will make you faster ⚡.
