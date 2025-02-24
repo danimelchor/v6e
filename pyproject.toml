@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "v6e"
 description = "A simple, type-safe, and extensible Python validations framework"
 readme = "README.md"
-version = "0.1.7"
+version = "0.1.8"
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 requires-python = "~=3.11,<3.13"
