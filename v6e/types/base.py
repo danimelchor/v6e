@@ -59,6 +59,14 @@ ParserFn: t.TypeAlias = t.Callable[t.Concatenate[V6eTypeType, T, P], T | None]
 
 
 def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
+    """
+    Converts a function taking a value and any arbitrary arguments into a
+    chainable parser function. The function must take in the value being parsed as
+    the first argument, and any other args will be specified by the user. Additionally,
+    the function must return a value of the same type as the one being passed by the user
+    or None to return the same.
+    """
+
     def _impl(self: V6eTypeType, *args: P.args, **kwargs: P.kwargs) -> V6eTypeType:
         def _fn(value: T):
             try:
