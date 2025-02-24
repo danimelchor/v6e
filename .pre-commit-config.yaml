@@ -17,8 +17,8 @@ repos:
         name: bandit
         exclude: ^tests/
         args:
-          - -r
-          - src
+          - -c
+          - pyproject.toml
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.

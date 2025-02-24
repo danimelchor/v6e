@@ -1,2 +1,2 @@
-class ValidationException(Exception):
+class ParseException(Exception):
     pass

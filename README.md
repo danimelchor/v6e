@@ -6,7 +6,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/v6e)](https://pypi.org/project/v6e/)
 [![Contributors](https://img.shields.io/github/contributors/danimelchor/v6e)](https://github.com/danimelchor/v6e/graphs/contributors)
 
-A simple, type-safe, and extensible Python validations framework
+A simple, type-safe, and extensible Python parsing and validation framework
 
 ### Why the name?
 
@@ -17,76 +17,28 @@ A simple, type-safe, and extensible Python validations framework
 Check out the examples in `./examples`! You can run them locally with:
 
 ```
-uv run examples/validations.py
+uv run examples/parsers.py
 ```
 
 ## Usage
 
-**Basic validations**
 ```python
 import v6e as v
 
-my_validation = v.int().gte(18).lte(21)
+my_parser = v.int().gte(18).lte(21)
 
 # Use it only to check if the value conforms
-my_validation.check(18)  # True
-my_validation.check(21)  # True
-my_validation.check(54)  # False
+my_parser.check(18)  # True
+my_parser.check(21)  # True
+my_parser.check(54)  # False
 
 # Use `.parse()` to validate and get the parsed value
-my_validation.parse(21)  # Ok -> Returns 21 (int)
-my_validation.parse("21")  # Ok -> Returns 21 (int)
-my_validation.parse(54)  # Err -> Raises a ValidationException
+my_parser.parse(21)  # Ok -> Returns 21 (int)
+my_parser.parse("21")  # Ok -> Returns 21 (int)
+my_parser.parse(54)  # Err -> Raises a ParseException
 ```
 
-**Chaining your validations and transformations**
-```python
-my_validation = v.str().trim().starts_with("foo").ends_with("foo").regex(r"^[a-z0-9]*$")
-my_validation.parse("  foo12")  # Ok -> Returns 'foo12' (str)
-my_validation.parse("12foo  ")  # Ok -> Returns '12foo' (str)
-my_validation.parse("1foo2")  # Err -> Raises a ValidationException
-```
-
-**Handling multiple possible types**
-```python
-union = v.str().starts_with("foo") | v.int().gte(5)
-
-union.parse("foobar")  # Ok -> Returns 'foobar' (str)
-union.parse("1foo2")  # Err -> Raises a ValidationException
-
-union.parse(5)  # Ok -> Returns 5 (int)
-union.parse(3)  # Err -> Raises a ValidationException
-
-union.parse(None)  # Err -> Raises a ValidationException
-```
-
-**Custom validations**
-```python
-def _validate_earth_age(x: int) -> None:
-    if x != 4_543_000_000:
-        raise ValueError("The Earth is 4.543 billion years old. Try 4543000000.")
-
-earth_age = v.int().custom(_validate_earth_age)
-earth_age.parse(4_543_000_000)  # Ok -> Returns 4_543_000_000 (int)
-earth_age.parse("4543000000")  # Ok -> Returns 4_543_000_000 (int)
-earth_age.parse(1)  # Err -> Raises ValidationException
-```
-
-**Custom reusable types**
-```python
-class DivThree(v.IntType):
-    @override
-    def parse_raw(self, raw: t.Any):
-        parsed: int = super().parse_raw(raw)
-        if parsed % 3 != 0:
-            raise ValueError(f"Woops! {parsed!r} is not divisible by three")
-
-
-my_validation = DivThree().gt(5)
-my_validation.parse(6)  # Ok -> Returns 6
-my_validation.parse(3)  # Err (not >5) -> Raises a ValidationException
-my_validation.parse(7)  # Err (not div by 3) -> Raises a ValidationException
-```
+`v6e` also supports [custom parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-parsers), [custom reusable types](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), [unions of parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), and more. See more in our [docs](https://github.com/danimelchor/v6e/tree/master/docs/index.md)!
 
 ## 🐍 Type-checking
 
@@ -95,11 +47,11 @@ from the arguments you pass in.
 
 In this example your editor will correctly infer the type:
 ```python
-my_validation = v.int().gte(8).lte(4)
-t.reveal_type(my_validation)  # Type of "my_validation" is "V6eInt"
-t.reveal_type(my_validation.check)  # Type of "my_validation.check" is "(raw: Any) -> bool"
-t.reveal_type(my_validation.safe_parse)  # Type of "my_validation" is "(raw: Any) -> V6eResult[int]"
-t.reveal_type(my_validation.parse)  # Type of "my_validation" is "(raw: Any) -> int"
+my_parser = v.int().gte(8).lte(4)
+t.reveal_type(my_parser)  # Type of "my_parser" is "V6eInt"
+t.reveal_type(my_parser.check)  # Type of "my_parser.check" is "(raw: Any) -> bool"
+t.reveal_type(my_parser.safe_parse)  # Type of "my_parser" is "(raw: Any) -> V6eResult[int]"
+t.reveal_type(my_parser.parse)  # Type of "my_parser" is "(raw: Any) -> int"
 ```
 
 ## Why do I care?

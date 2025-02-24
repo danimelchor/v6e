@@ -6,7 +6,7 @@ from copy import copy
 
 from typing_extensions import override
 
-from v6e.exceptions import ValidationException
+from v6e.exceptions import ParseException
 from v6e.types import utils
 
 T = t.TypeVar("T")
@@ -39,9 +39,9 @@ class V6eResult(t.Generic[T]):
         assert self._result is not None
         return self._result
 
-    def get_exception(self) -> ValidationException:
+    def get_exception(self) -> ParseException:
         assert self._error_message is not None
-        exc = ValidationException(self._error_message)
+        exc = ParseException(self._error_message)
         if self._cause:
             exc.__cause__ = self._cause
         return exc
@@ -63,7 +63,7 @@ def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
         def _fn(value: T):
             try:
                 res = wrapped_fun(self, value, *args, **kwargs)
-            except (ValueError, TypeError, ValidationException) as e:
+            except (ValueError, TypeError, ParseException) as e:
                 return V6eResult(error_message=str(e))
 
             return V6eResult(
@@ -146,7 +146,7 @@ class _Union(V6eType[T | C]):
     def parse_raw(self, raw: t.Any) -> T | C:
         try:
             return self.left.parse(raw)
-        except ValidationException:
+        except ParseException:
             return self.right.parse(raw)
 
     @override
