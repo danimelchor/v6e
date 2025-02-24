@@ -7,13 +7,14 @@ from copy import copy
 from typing_extensions import override
 
 from v6e.exceptions import ParseException
-from v6e.types.decorators import parser
+from v6e.types import utils
 from v6e.types.result import V6eResult
 
 T = t.TypeVar("T")
 C = t.TypeVar("C")
 P = t.ParamSpec("P")
 R = t.TypeVar("R")
+V = t.TypeVar("V")
 V6eTypeType = t.TypeVar("V6eTypeType", bound="V6eType")
 
 
@@ -24,6 +25,69 @@ class CheckFn(t.Protocol[T]):
 class Check(t.NamedTuple, t.Generic[T]):
     name: str
     check: CheckFn[T]
+
+
+class NoArgParser(t.Protocol[V6eTypeType, T]):
+    def __call__(_s, self: V6eTypeType, value: T, /) -> T | None: ...
+
+
+class ChainNoArgParser(t.Protocol[V6eTypeType]):
+    def __call__(_s, self: V6eTypeType, /, msg: str | None = None) -> V6eTypeType: ...
+
+
+class OneArgParser(t.Protocol[V6eTypeType, T, V]):
+    def __call__(_s, self: V6eTypeType, value: T, x: V, /) -> T | None: ...
+
+
+class ChainOneArgParser(t.Protocol[V6eTypeType, V]):
+    def __call__(
+        _s, self: V6eTypeType, x: V, /, msg: str | None = None
+    ) -> V6eTypeType: ...
+
+
+@t.overload
+def parser(
+    wrapped_fun: NoArgParser[V6eTypeType, T],
+) -> ChainNoArgParser[V6eTypeType]: ...
+
+
+@t.overload
+def parser(
+    wrapped_fun: OneArgParser[V6eTypeType, T, V],
+) -> ChainOneArgParser[V6eTypeType, V]: ...
+
+
+def parser(
+    wrapped_fun: NoArgParser[V6eTypeType, T] | OneArgParser[V6eTypeType, T, V],
+) -> ChainNoArgParser[V6eTypeType] | ChainOneArgParser[V6eTypeType, V]:
+    """
+    Converts a function taking a value and any arbitrary arguments into a
+    chainable parser function. The function must take in the value being parsed as
+    the first argument, and any other args will be specified by the user. Additionally,
+    the function must return a value of the same type as the one being passed by the user
+    or None to return the same.
+    """
+
+    def _impl(self: V6eTypeType, *args, msg: str | None = None) -> V6eTypeType:
+        # Create the function we will chain
+        def _fn(value: T) -> V6eResult[T]:
+            try:
+                res = wrapped_fun(self, value, *args)
+            except (ValueError, TypeError, ParseException) as e:
+                err_msg = msg or str(e)
+                return V6eResult(error_message=err_msg.format(value))
+
+            return V6eResult(
+                result=value if res is None else res,
+            )
+
+        # Get a string representation
+        repr = utils.repr_fun(wrapped_fun, *args)
+
+        # Chain it
+        return self.chain(repr, _fn)
+
+    return _impl
 
 
 class V6eType(ABC, t.Generic[T]):

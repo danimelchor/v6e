@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import typing as t
 
-from v6e.types.base import V6eType
-from v6e.types.decorators import parser
+from v6e.types.base import V6eType, parser
 
 
 class _Comparable(t.Protocol):
