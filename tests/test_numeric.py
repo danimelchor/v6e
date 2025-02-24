@@ -12,7 +12,7 @@ from tests.util import (
 all_test_cases = generate_tests(
     # ----- Running the parsing logic -----
     V6eTest(
-        fn=v.float(),
+        fn=[v.float()],
         success_args=[
             -1,
             0,
@@ -32,7 +32,7 @@ all_test_cases = generate_tests(
         failure_args=["a", datetime.now(), timedelta()],
     ),
     V6eTest(
-        fn=v.int(),
+        fn=[v.int()],
         success_args=[-1, 0, 1, "-1", "0", "1", True, False],
         failure_args=[
             0.1,
@@ -68,17 +68,17 @@ all_test_cases = generate_tests(
         failure_args=[0, 1],
     ),
     V6eTest(
-        fn=v.int().nonnegative(),
+        fn=[v.int().nonnegative()],
         success_args=[0, 1],
         failure_args=[-2, -1],
     ),
     V6eTest(
-        fn=v.int().nonpositive(),
+        fn=[v.int().nonpositive()],
         success_args=[-1, 0],
         failure_args=[1, 2],
     ),
     V6eTest(
-        fn=v.int().multiple_of(3),
+        fn=[v.int().multiple_of(3)],
         success_args=[-6, -3, 0, 3, 6],
         failure_args=[-4, -2, -1, 1, 2, 4],
     ),
