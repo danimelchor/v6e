@@ -125,6 +125,10 @@ class V6eType(ABC, t.Generic[T]):
             raise parse_res.get_exception()
         return parse_res.result
 
+    @t.final
+    def __call__(self, raw: t.Any) -> T:
+        return self.parse(raw)
+
     @parser
     def custom(self, value: T, fn: t.Callable[[T], T | None]) -> T | None:
         return fn(value)

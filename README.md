@@ -24,10 +24,11 @@ my_parser.check(18)  # True
 my_parser.check(21)  # True
 my_parser.check(54)  # False
 
-# Use `.parse()` to validate and get the parsed value
+# Use `.parse()` (or call it) to validate and get the parsed value
 my_parser.parse(21)  # Ok -> Returns 21 (int)
 my_parser.parse("21")  # Ok -> Returns 21 (int)
 my_parser.parse(54)  # Err -> Raises a ParseException
+my_parser(54)  # Err -> Raises a ParseException
 ```
 
 `v6e` also supports [custom parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-parsers), [custom reusable types](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), [unions of parsers](https://github.com/danimelchor/v6e/tree/master/docs/index.md#custom-reusable-types), and more. See more in our [docs](https://github.com/danimelchor/v6e/tree/master/docs/index.md)!
@@ -52,6 +53,7 @@ t.reveal_type(my_parser)  # Type of "my_parser" is "V6eInt"
 t.reveal_type(my_parser.check)  # Type of "my_parser.check" is "(raw: Any) -> bool"
 t.reveal_type(my_parser.safe_parse)  # Type of "my_parser" is "(raw: Any) -> V6eResult[int]"
 t.reveal_type(my_parser.parse)  # Type of "my_parser" is "(raw: Any) -> int"
+t.reveal_type(my_parser.__call__)  # Type of "my_parser" is "(raw: Any) -> int"
 ```
 
 ## Why should I care?

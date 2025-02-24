@@ -67,6 +67,7 @@ def main() -> None:
     t.reveal_type(my_parser.check)
     t.reveal_type(my_parser.safe_parse)
     t.reveal_type(my_parser.parse)
+    t.reveal_type(my_parser.__call__)
 
 
 if __name__ == "__main__":
