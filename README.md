@@ -58,3 +58,10 @@ t.reveal_type(my_parser.parse)  # Type of "my_parser" is "(raw: Any) -> int"
 
 Type checking will help you catch issues way earlier in the development cycle. It will also
 provide nice autocomplete features in your editor that will make you faster ⚡.
+
+---
+
+### Alpha notice
+
+This project is still in its `alpha` phase. Expect frequent and breaking changes. You can see
+more in our [planned work doc](https://github.com/danimelchor/v6e/blob/master/PLANNED_WORK.md).
