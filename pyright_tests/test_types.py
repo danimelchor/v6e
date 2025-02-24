@@ -26,6 +26,10 @@ t.assert_type(v.datetime().tz(timezone.utc), v.V6eDateTime)
 
 t.assert_type(v.timedelta(), v.V6eTimeDelta)
 
+t.assert_type(v.dict(a=v.int()), v.V6eDict)
+
+t.assert_type(v.struct(a=v.int(), b=v.bool()), v.V6eStruct)
+
 
 # ---- Custom ----
 def double(a: int) -> int:

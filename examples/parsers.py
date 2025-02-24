@@ -6,23 +6,7 @@ import typing as t
 from typing_extensions import override
 
 import v6e as v
-
-# --- DEMO UTILS ---
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
-BLUE = "\033[34m"
-DEFAULT = "\033[39m"
-
-
-def print_title(x: str) -> None:
-    print(BLUE + "\n" + x + DEFAULT)
-
-
-def print_example(parser: v.V6eType, value: t.Any) -> None:
-    result = parser.check(value)
-    color = GREEN if result else RED
-    print(f"Does {value!r} parse with {parser}? {color}{result}{DEFAULT}")
+from examples.utils import print_example, print_title
 
 
 # --- DEMO ---

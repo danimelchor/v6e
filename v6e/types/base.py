@@ -78,10 +78,10 @@ def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
 
 
 class V6eType(ABC, t.Generic[T]):
-    def __init__(self, alias: str | None = None) -> None:
+    def __init__(self, *args, _alias: str | None = None, **kwargs) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
-        self._alias = alias
+        self._alias: str | None = _alias
 
     @abstractmethod
     def parse_raw(self, raw: t.Any) -> T: ...
@@ -129,11 +129,14 @@ class V6eType(ABC, t.Generic[T]):
     def custom(self, value: T, fn: t.Callable[[T], T | None]) -> T | None:
         return fn(value)
 
+    def repr_args(self) -> str:
+        return ""
+
     @override
     def __repr__(self):
         name = self._alias or self.__class__.__name__
         checks = "".join(f".{c.name}" for c in self._checks)
-        return f"v6e.{name}(){checks}"
+        return f"v6e.{name}({self.repr_args()}){checks}"
 
 
 class V6eUnion(V6eType[T | C]):

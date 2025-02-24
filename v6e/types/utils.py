@@ -27,7 +27,7 @@ def repr_fun(fn: ParserFn[V6eTypeType, T, P], *args: P.args, **kwargs: P.kwargs)
     return f"{repr}({all_args_str})"
 
 
-def alias(cls: type[V6eTypeType], name: str) -> t.Callable[[], V6eTypeType]:
+def alias(cls: type[V6eTypeType], name: str) -> type[V6eTypeType]:
     """
     Utility to alias a V6eType with a different name
     so that they're represented differently. For example:
@@ -37,8 +37,4 @@ def alias(cls: type[V6eTypeType], name: str) -> t.Callable[[], V6eTypeType]:
     print(bool().gt(5))  # v6e.bool().gt(5)
     ```
     """
-
-    def inner():
-        return cls(alias=name)
-
-    return inner
+    return t.cast(type[V6eTypeType], type(name, (cls,), {}))
