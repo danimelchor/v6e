@@ -1,8 +1,9 @@
 from v6e.exceptions import ParseException
 from v6e.types import utils
-from v6e.types.base import V6eType, V6eUnion, parser
+from v6e.types.base import V6eType, V6eUnion
 from v6e.types.boolean import V6eBool
 from v6e.types.calendar import V6eDateTime, V6eTimeDelta
+from v6e.types.decorators import parser
 from v6e.types.dict import V6eDict
 from v6e.types.numbers import V6eFloat, V6eInt
 from v6e.types.string import V6eStr

@@ -4,7 +4,8 @@ import typing as t
 
 from typing_extensions import override
 
-from v6e.types.comparable import V6eComparableMixin, parser
+from v6e.types.comparable import V6eComparableMixin
+from v6e.types.decorators import parser
 
 Numeric = t.TypeVar("Numeric", bound=int | float)
 

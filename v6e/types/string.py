@@ -2,8 +2,8 @@ import re
 
 from typing_extensions import override
 
-from v6e.types.base import parser
 from v6e.types.comparable import V6eComparableMixin
+from v6e.types.decorators import parser
 from v6e.types.sequences import V6eSequenceMixin
 
 EMAIL = re.compile(

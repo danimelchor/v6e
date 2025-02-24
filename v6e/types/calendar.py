@@ -7,8 +7,8 @@ from datetime import datetime, timedelta, timezone
 from dateutil.parser import parse
 from typing_extensions import override
 
-from v6e.types.base import parser
 from v6e.types.comparable import V6eComparableMixin
+from v6e.types.decorators import parser
 
 
 class V6eDateTime(V6eComparableMixin[datetime]):

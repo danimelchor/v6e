@@ -7,47 +7,18 @@ from copy import copy
 from typing_extensions import override
 
 from v6e.exceptions import ParseException
-from v6e.types import utils
+from v6e.types.decorators import parser
+from v6e.types.result import V6eResult
 
 T = t.TypeVar("T")
 C = t.TypeVar("C")
 P = t.ParamSpec("P")
+R = t.TypeVar("R")
 V6eTypeType = t.TypeVar("V6eTypeType", bound="V6eType")
 
 
-class V6eResult(t.Generic[T]):
-    __slots__ = ("_result", "_error_message", "_cause")
-
-    def __init__(
-        self,
-        result: T | None = None,
-        error_message: str | None = None,
-        _cause: Exception | None = None,
-    ) -> None:
-        self._result = result
-        self._error_message = error_message
-        self._cause = _cause
-
-    def is_err(self) -> bool:
-        return self._error_message is not None
-
-    def is_ok(self) -> bool:
-        return self._error_message is None
-
-    @property
-    def result(self) -> T:
-        assert self._result is not None
-        return self._result
-
-    def get_exception(self) -> ParseException:
-        assert self._error_message is not None
-        exc = ParseException(self._error_message)
-        if self._cause:
-            exc.__cause__ = self._cause
-        return exc
-
-
-CheckFn: t.TypeAlias = t.Callable[[T], V6eResult]
+class CheckFn(t.Protocol[T]):
+    def __call__(self, value: T) -> V6eResult[T]: ...
 
 
 class Check(t.NamedTuple, t.Generic[T]):
@@ -55,38 +26,8 @@ class Check(t.NamedTuple, t.Generic[T]):
     check: CheckFn[T]
 
 
-ParserFn: t.TypeAlias = t.Callable[t.Concatenate[V6eTypeType, T, P], T | None]
-
-
-def parser(wrapped_fun: ParserFn[V6eTypeType, T, P]):
-    """
-    Converts a function taking a value and any arbitrary arguments into a
-    chainable parser function. The function must take in the value being parsed as
-    the first argument, and any other args will be specified by the user. Additionally,
-    the function must return a value of the same type as the one being passed by the user
-    or None to return the same.
-    """
-
-    def _impl(self: V6eTypeType, *args: P.args, **kwargs: P.kwargs) -> V6eTypeType:
-        def _fn(value: T):
-            try:
-                res = wrapped_fun(self, value, *args, **kwargs)
-            except (ValueError, TypeError, ParseException) as e:
-                return V6eResult(error_message=str(e))
-
-            return V6eResult(
-                result=value if res is None else res,
-            )
-
-        repr = utils.repr_fun(wrapped_fun, *args, **kwargs)
-        self._chain(repr, _fn)
-        return self
-
-    return _impl
-
-
 class V6eType(ABC, t.Generic[T]):
-    def __init__(self, *args, _alias: str | None = None, **kwargs) -> None:
+    def __init__(self, _alias: str | None = None) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
         self._alias: str | None = _alias
@@ -94,7 +35,7 @@ class V6eType(ABC, t.Generic[T]):
     @abstractmethod
     def parse_raw(self, raw: t.Any) -> T: ...
 
-    def _chain(self, name: str, check: CheckFn[T]) -> t.Self:
+    def chain(self, name: str, check: CheckFn[T]) -> t.Self:
         cp = copy(self)
         cp._checks.append(Check(name, check))
         return cp
@@ -106,7 +47,7 @@ class V6eType(ABC, t.Generic[T]):
     def safe_parse(self, raw: t.Any) -> V6eResult[T]:
         try:
             value = self.parse_raw(raw)
-        except Exception as e:
+        except (ValueError, TypeError, ParseException) as e:
             return V6eResult(
                 error_message=f"Failed to parse {raw} as {self}",
                 _cause=e,

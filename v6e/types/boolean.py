@@ -2,7 +2,8 @@ import typing as t
 
 from typing_extensions import override
 
-from v6e.types.base import V6eType, parser
+from v6e.types.base import V6eType
+from v6e.types.decorators import parser
 
 TRUE_BOOL_STR_LITERALS: set[str] = {"true", "yes", "y"}
 FALSE_BOOL_STR_LITERALS: set[str] = {"false", "no", "n"}

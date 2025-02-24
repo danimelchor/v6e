@@ -41,6 +41,7 @@ testpaths = ["tests"]
 exclude = [
     "**/__pycache__",
 ]
+# strict = ["v6e/"]
 reportMissingTypeStubs = false
 
 [tool.bandit]
