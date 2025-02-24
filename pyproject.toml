@@ -15,6 +15,7 @@ authors = [
 ]
 keywords = ["validation", "validate", "data", "check"]
 dependencies = [
+    "python-dateutil>=2.9.0",
     "typing-extensions>=4.12.2",
 ]
 
