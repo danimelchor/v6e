@@ -91,8 +91,8 @@ class V6eType(ABC, t.Generic[T]):
         cp._checks.append(Check(name, check))
         return cp
 
-    def __or__(self, other: V6eType[C]) -> _Union[T, C]:
-        return _Union(self, other)
+    def __or__(self, other: V6eType[C]) -> V6eUnion[T, C]:
+        return V6eUnion(self, other)
 
     @t.final
     def safe_parse(self, raw: t.Any) -> V6eResult[T]:
@@ -136,7 +136,7 @@ class V6eType(ABC, t.Generic[T]):
         return f"v6e.{name}(){checks}"
 
 
-class _Union(V6eType[T | C]):
+class V6eUnion(V6eType[T | C]):
     def __init__(self, left: V6eType[T], right: V6eType[C]) -> None:
         super().__init__()
         self.left = left
