@@ -28,7 +28,6 @@ all_test_cases = generate_tests(
             ["1", "2", "3"],
         ],
     ),
-    # ----- Running sequence checks -----
     V6eTest(
         fn=[v.list(v.int()).max(2)],
         success_args=[[1, 2], [1], []],

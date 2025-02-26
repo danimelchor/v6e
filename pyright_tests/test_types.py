@@ -30,6 +30,8 @@ t.assert_type(v.dict(a=v.int()), v.V6eDict)
 
 t.assert_type(v.struct(a=v.int(), b=v.bool()), v.V6eStruct)
 
+t.assert_type(v.list(v.int()), v.V6eList[int])
+
 
 # ---- Custom ----
 def double(a: int) -> int:

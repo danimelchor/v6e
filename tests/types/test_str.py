@@ -16,7 +16,7 @@ all_test_cases = generate_tests(
         success_args=["a"],
         failure_args=[1, False, datetime.now(), timedelta()],
     ),
-    # ----- Running sequence checks -----
+    # ----- Running string checks -----
     V6eTest(
         fn=[v.str().max(5)],
         success_args=["aaaaa", "x"],
@@ -37,7 +37,6 @@ all_test_cases = generate_tests(
         success_args=["a", "abc", "cba"],
         failure_args=["cbd", "bc", ""],
     ),
-    # ----- Running string checks -----
     V6eTest(
         fn=[v.str().starts_with("a")],
         success_args=["a", "abc"],
