@@ -27,39 +27,9 @@ class Check(t.NamedTuple, t.Generic[T]):
     check: CheckFn[T]
 
 
-class NoArgParser(t.Protocol[V6eTypeType, T]):
-    def __call__(_s, self: V6eTypeType, value: T, /) -> T | None: ...
-
-
-class ChainNoArgParser(t.Protocol[V6eTypeType]):
-    def __call__(_s, self: V6eTypeType, /, msg: str | None = None) -> V6eTypeType: ...
-
-
-class OneArgParser(t.Protocol[V6eTypeType, T, V]):
-    def __call__(_s, self: V6eTypeType, value: T, x: V, /) -> T | None: ...
-
-
-class ChainOneArgParser(t.Protocol[V6eTypeType, V]):
-    def __call__(
-        _s, self: V6eTypeType, x: V, /, msg: str | None = None
-    ) -> V6eTypeType: ...
-
-
-@t.overload
 def parser(
-    wrapped_fun: NoArgParser[V6eTypeType, T],
-) -> ChainNoArgParser[V6eTypeType]: ...
-
-
-@t.overload
-def parser(
-    wrapped_fun: OneArgParser[V6eTypeType, T, V],
-) -> ChainOneArgParser[V6eTypeType, V]: ...
-
-
-def parser(
-    wrapped_fun: NoArgParser[V6eTypeType, T] | OneArgParser[V6eTypeType, T, V],
-) -> ChainNoArgParser[V6eTypeType] | ChainOneArgParser[V6eTypeType, V]:
+    wrapped_fun: t.Callable[t.Concatenate[V6eTypeType, T, P], T | None],
+) -> t.Callable[t.Concatenate[V6eTypeType, P], V6eTypeType]:
     """
     Converts a function taking a value and any arbitrary arguments into a
     chainable parser function. The function must take in the value being parsed as
@@ -68,21 +38,28 @@ def parser(
     or None to return the same.
     """
 
-    def _impl(self: V6eTypeType, *args, msg: str | None = None) -> V6eTypeType:
+    def _impl(self: V6eTypeType, *args: P.args, **kwargs: P.kwargs) -> V6eTypeType:
+        # Extract custom error message
+        custom_msg = kwargs.pop("msg", None)
+        assert isinstance(custom_msg, str | None)
+
         # Create the function we will chain
         def _fn(value: T) -> V6eResult[T]:
             try:
-                res = wrapped_fun(self, value, *args)
+                res = wrapped_fun(self, value, *args, **kwargs)
             except (ValueError, TypeError, ParseException) as e:
-                err_msg = msg or str(e)
-                return V6eResult(error_message=err_msg.format(value))
+                return V6eResult(
+                    error_message=(
+                        custom_msg.format(value) if custom_msg is not None else str(e)
+                    )
+                )
 
             return V6eResult(
                 result=value if res is None else res,
             )
 
         # Get a string representation
-        repr = utils.repr_fun(wrapped_fun, *args)
+        repr = utils.repr_fun(wrapped_fun, *args, **kwargs)
 
         # Chain it
         return self.chain(repr, _fn)

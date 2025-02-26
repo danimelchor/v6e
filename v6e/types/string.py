@@ -24,32 +24,30 @@ class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
         return raw
 
     @parser
-    def starts_with(self, value: str, x: str):
+    def starts_with(self, value: str, x: str, /, msg: str | None = None):
         if not value.startswith(x):
             raise ValueError(
                 f"{value} does not start with {x}",
             )
 
     @parser
-    def ends_with(self, value: str, x: str):
+    def ends_with(self, value: str, x: str, /, msg: str | None = None):
         if not value.endswith(x):
             raise ValueError(
                 f"{value} does not start with {x}",
             )
 
     @parser
-    def regex(self, value: str, pattern: str):
-        if re.search(pattern, value) is None:
-            raise ValueError(
-                f"The string {value} did not match the pattern {pattern!r}"
-            )
+    def regex(self, value: str, x: str, /, msg: str | None = None):
+        if re.search(x, value) is None:
+            raise ValueError(f"The string {value} did not match the pattern {x!r}")
 
     @parser
-    def email(self, value: str):
+    def email(self, value: str, /, msg: str | None = None):
         if EMAIL.match(value) is None:
             raise ValueError(f"The string {value} is not a valid email")
 
     @parser
-    def uuid(self, value: str):
+    def uuid(self, value: str, /, msg: str | None = None):
         if UUID.match(value) is None:
             raise ValueError(f"The string {value} is not a valid uuid")

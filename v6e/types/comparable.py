@@ -17,42 +17,42 @@ Comparable = t.TypeVar("Comparable", bound=_Comparable)
 
 class V6eComparableMixin(V6eType[Comparable]):
     @parser
-    def gt(self, value: Comparable, x: Comparable):
+    def gt(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value <= x:
             raise ValueError(
                 f"Value {x} must be greater than {value}",
             )
 
     @parser
-    def gte(self, value: Comparable, x: Comparable):
+    def gte(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value < x:
             raise ValueError(
                 f"Value {x} must be greater than or equal to {value}",
             )
 
     @parser
-    def lt(self, value: Comparable, x: Comparable):
+    def lt(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value >= x:
             raise ValueError(
                 f"Value {x} must less than {value}",
             )
 
     @parser
-    def lte(self, value: Comparable, x: Comparable):
+    def lte(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value > x:
             raise ValueError(
                 f"Value {x} must less than or equal to {value}",
             )
 
     @parser
-    def min(self, value: Comparable, x: Comparable):
+    def min(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value < x:
             raise ValueError(
                 f"Value {x} must be greater than or equal to {value}",
             )
 
     @parser
-    def max(self, value: Comparable, x: Comparable):
+    def max(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value > x:
             raise ValueError(
                 f"Value {x} must less than or equal to {value}",

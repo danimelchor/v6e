@@ -36,11 +36,11 @@ class V6eBool(V6eType[bool]):
         return raw
 
     @parser
-    def is_true(self, value: bool):
+    def is_true(self, value: bool, /, msg: str | None = None):
         if not value:
             raise ValueError(f"Value {value} is not True")
 
     @parser
-    def is_false(self: t.Self, value: bool):
+    def is_false(self: t.Self, value: bool, /, msg: str | None = None):
         if value:
             raise ValueError(f"Value {value} is not False")

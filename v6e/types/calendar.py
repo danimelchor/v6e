@@ -23,7 +23,7 @@ class V6eDateTime(V6eComparableMixin[datetime]):
         return parse(raw)
 
     @parser
-    def tz(self, value: datetime, tz: timezone) -> datetime:
+    def tz(self, value: datetime, tz: timezone, /, msg: str | None = None) -> datetime:
         return value.astimezone(tz)
 
 
