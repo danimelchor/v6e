@@ -68,10 +68,9 @@ def parser(
 
 
 class V6eType(ABC, t.Generic[T]):
-    def __init__(self, _alias: str | None = None) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
-        self._alias: str | None = _alias
 
     @abstractmethod
     def parse_raw(self, raw: t.Any) -> T: ...
@@ -128,7 +127,7 @@ class V6eType(ABC, t.Generic[T]):
 
     @override
     def __repr__(self):
-        name = self._alias or self.__class__.__name__
+        name = self.__class__.__name__
         checks = "".join(f".{c.name}" for c in self._checks)
         return f"v6e.{name}({self.repr_args()}){checks}"
 

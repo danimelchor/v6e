@@ -4,9 +4,9 @@ from v6e.types.base import V6eType
 
 
 class V6eDict(V6eType[dict[str, t.Any]]):
-    def __init__(self, _alias: str | None = None, **definition: V6eType[t.Any]) -> None:
-        super().__init__(_alias)
+    def __init__(self, **definition: V6eType[t.Any]) -> None:
         self.definition = definition
+        super().__init__()
 
     def parse_raw(self, raw: t.Any) -> dict[str, t.Any]:
         if not isinstance(raw, dict):
