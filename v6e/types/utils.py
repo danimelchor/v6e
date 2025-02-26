@@ -2,13 +2,10 @@ from __future__ import annotations
 
 import typing as t
 
-from v6e.types.base import ParserFn, V6eTypeType
-
-P = t.ParamSpec("P")
-T = t.TypeVar("T")
+from v6e.types.base import V6eTypeType
 
 
-def repr_fun(fn: ParserFn[V6eTypeType, T, P], *args: P.args, **kwargs: P.kwargs):
+def repr_fun(fn: t.Callable[...], *args: t.Any, **kwargs: t.Any):
     repr = f"{fn.__name__}"
     if not args and not kwargs:
         return repr

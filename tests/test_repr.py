@@ -26,6 +26,10 @@ def _custom_fn(x: int) -> None:
             v.int().gte(5) | v.str().contains("a"),
             "v6e.int().gte(5) | v6e.str().contains('a')",
         ),
+        (
+            v.int().gte(5, msg="Custom error doesn't show"),
+            "v6e.int().gte(5)",
+        ),
     ],
 )
 def test_base_class_repr(parser, expected):
