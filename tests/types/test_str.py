@@ -16,28 +16,17 @@ all_test_cases = generate_tests(
         success_args=["a"],
         failure_args=[1, False, datetime.now(), timedelta()],
     ),
-    # ----- Running comparable checks -----
+    # ----- Running string checks -----
     V6eTest(
-        fn=[v.str().max("x"), v.str().lte("x")],
-        success_args=["a", "x"],
-        failure_args=["z"],
+        fn=[v.str().max(5)],
+        success_args=["aaaaa", "x"],
+        failure_args=["zzzzzz"],
     ),
     V6eTest(
-        fn=[v.str().min("b"), v.str().gte("b")],
-        success_args=["b", "z"],
-        failure_args=["a"],
+        fn=[v.str().min(5)],
+        success_args=["bbbbbb", "zzzzz"],
+        failure_args=["aaaa"],
     ),
-    V6eTest(
-        fn=[v.str().gt("a")],
-        success_args=["b"],
-        failure_args=["a"],
-    ),
-    V6eTest(
-        fn=[v.str().lt("b")],
-        success_args=["a"],
-        failure_args=["b"],
-    ),
-    # ----- Running sequence checks -----
     V6eTest(
         fn=[v.str().length(5)],
         success_args=["abcde"],
@@ -48,7 +37,6 @@ all_test_cases = generate_tests(
         success_args=["a", "abc", "cba"],
         failure_args=["cbd", "bc", ""],
     ),
-    # ----- Running string checks -----
     V6eTest(
         fn=[v.str().starts_with("a")],
         success_args=["a", "abc"],

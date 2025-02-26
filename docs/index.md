@@ -85,7 +85,18 @@ v.tz(timezone.utc)
 v.timedelta()  # or v.V6eTimeDelta
 ```
 
-### Dict
+### Lists
+
+```python
+# All are equivalent
+v.int().gt(5).list()  # Recommended
+v.list(v.int().gt(5))
+v.V6eList(v.V6eInt().gt(5))
+
+v.int().list()
+```
+
+### Dicts
 
 The `Dict` type is used to ensure the schema of a Python native `dict`. They're
 composed of keys and the validation for that key. Extra keys are removed from the `dict`.
@@ -97,7 +108,7 @@ v.dict(  # or v.V6eDict
 )
 ```
 
-### Struct
+### Structs
 
 Similar to the `Dict` type, the `Struct` type is used to validate the fields inside an
 object conform to the provided schema. Extra keys are left as they are.

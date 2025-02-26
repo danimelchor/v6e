@@ -2,9 +2,7 @@ import re
 
 from typing_extensions import override
 
-from v6e.types.base import parser
-from v6e.types.comparable import V6eComparableMixin
-from v6e.types.sequences import V6eSequenceMixin
+from v6e.types.base import V6eType, parser
 
 EMAIL = re.compile(
     r"^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$",
@@ -16,7 +14,7 @@ UUID = re.compile(
 )
 
 
-class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
+class V6eStr(V6eType[str]):
     @override
     def parse_raw(self, raw):
         if not isinstance(raw, str):
@@ -51,3 +49,36 @@ class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
     def uuid(self, value: str, /, msg: str | None = None):
         if UUID.match(value) is None:
             raise ValueError(f"The string {value} is not a valid uuid")
+
+    @parser
+    def length(self, value: str, x: int, /, msg: str | None = None):
+        if len(value) != x:
+            raise ValueError(
+                f"The length of {value} is not {x} (it's {len(value)})",
+            )
+
+    @parser
+    def max(self, value: str, x: int, /, msg: str | None = None):
+        if len(value) > x:
+            raise ValueError(
+                f"The length of {value} has to be at most {x} (it's {len(value)})",
+            )
+
+    @parser
+    def min(self, value: str, x: int, /, msg: str | None = None):
+        if len(value) < x:
+            raise ValueError(
+                f"The length of {value} has to be at least {x} (it's {len(value)})",
+            )
+
+    @parser
+    def contains(self, value: str, x: str, /, msg: str | None = None):
+        if x not in value:
+            raise ValueError(
+                f"{value} does not contain {x}",
+            )
+
+    @parser
+    def nonempty(self, value: str, /, msg: str | None = None):
+        if len(value) == 0:
+            raise ValueError(f"The value {value} is empty")
