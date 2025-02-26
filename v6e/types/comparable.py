@@ -20,40 +20,40 @@ class V6eComparableMixin(V6eType[Comparable]):
     def gt(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value <= x:
             raise ValueError(
-                f"Value {x} must be greater than {value}",
+                f"Value {value} must be greater than {x}",
             )
 
     @parser
     def gte(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value < x:
             raise ValueError(
-                f"Value {x} must be greater than or equal to {value}",
+                f"Value {value} must be greater than or equal to {x}",
             )
 
     @parser
     def lt(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value >= x:
             raise ValueError(
-                f"Value {x} must less than {value}",
+                f"Value {value} must less than {x}",
             )
 
     @parser
     def lte(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value > x:
             raise ValueError(
-                f"Value {x} must less than or equal to {value}",
+                f"Value {value} must less than or equal to {x}",
             )
 
     @parser
     def min(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value < x:
             raise ValueError(
-                f"Value {x} must be greater than or equal to {value}",
+                f"Value {value} must be greater than or equal to {x}",
             )
 
     @parser
     def max(self, value: Comparable, x: Comparable, /, msg: str | None = None):
         if value > x:
             raise ValueError(
-                f"Value {x} must less than or equal to {value}",
+                f"Value {value} must less than or equal to {x}",
             )

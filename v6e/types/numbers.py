@@ -14,22 +14,22 @@ class V6eNumericMixin(V6eComparableMixin[Numeric]):
     @parser
     def positive(self, value: Numeric, /, msg: str | None = None):
         if value <= 0:
-            raise ValueError("Value {} must be positive")
+            raise ValueError(f"Value {value} must be positive")
 
     @parser
     def nonpositive(self, value: Numeric, /, msg: str | None = None):
         if value > 0:
-            raise ValueError("Value {} must not be positive")
+            raise ValueError(f"Value {value} must not be positive")
 
     @parser
     def negative(self, value: Numeric, /, msg: str | None = None):
         if value >= 0:
-            raise ValueError("Value {} must be negative")
+            raise ValueError(f"Value {value} must be negative")
 
     @parser
     def nonnegative(self, value: Numeric, /, msg: str | None = None):
         if value < 0:
-            raise ValueError("Value {} must not be negative")
+            raise ValueError(f"Value {value} must not be negative")
 
     @parser
     def multiple_of(self, value: Numeric, x: Numeric, /, msg: str | None = None):

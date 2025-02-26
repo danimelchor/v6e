@@ -6,5 +6,3 @@ discussing a usecase if it is not yet added in the following list:
 - [ ] Support for lists
 - [ ] Better integration with dataclasses through `field`s
 - [ ] Integration with `typing.Annotated` ([docs](https://docs.python.org/3/library/typing.html#typing.Annotated))
-- [ ] Review all error messages have the right shape
-- [ ] Allow for custom error messages per chained step
