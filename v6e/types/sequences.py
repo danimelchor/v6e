@@ -12,7 +12,7 @@ class V6eSequenceMixin(V6eType[T]):
     def length(self, value: T, x: int, /, msg: str | None = None):
         if len(value) != x:
             raise ValueError(
-                f"The length of {value} was not {x}",
+                f"The length of {value} is not {x} (it's {len(value)})",
             )
 
     @parser
