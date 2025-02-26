@@ -68,9 +68,10 @@ def parser(
 
 
 class V6eType(ABC, t.Generic[T]):
-    def __init__(self) -> None:
+    def __init__(self, msg: str | None = None) -> None:
         super().__init__()
         self._checks: list[Check[T]] = []
+        self._msg: str | None = msg
 
     @abstractmethod
     def parse_raw(self, raw: t.Any) -> T: ...
@@ -88,10 +89,12 @@ class V6eType(ABC, t.Generic[T]):
         try:
             value = self.parse_raw(raw)
         except (ValueError, TypeError, ParseException) as e:
-            return V6eResult(
-                error_message=f"Failed to parse {raw} as {self}",
-                _cause=e,
+            error_msg = (
+                self._msg.format(raw)
+                if self._msg is not None
+                else f"Failed to parse {raw} as {self}"
             )
+            return V6eResult(error_message=error_msg, _cause=e)
 
         for _, check in self._checks:
             parse_res = check(value)
