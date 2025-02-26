@@ -3,7 +3,6 @@ import re
 from typing_extensions import override
 
 from v6e.types.base import parser
-from v6e.types.comparable import V6eComparableMixin
 from v6e.types.sequences import V6eSequenceMixin
 
 EMAIL = re.compile(
@@ -16,7 +15,7 @@ UUID = re.compile(
 )
 
 
-class V6eStr(V6eComparableMixin[str], V6eSequenceMixin[str]):
+class V6eStr(V6eSequenceMixin[str]):
     @override
     def parse_raw(self, raw):
         if not isinstance(raw, str):
