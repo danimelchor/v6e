@@ -132,7 +132,7 @@ wheels = [
 
 [[package]]
 name = "v6e"
-version = "0.1.15"
+version = "0.1.16"
 source = { editable = "." }
 dependencies = [
     { name = "python-dateutil" },

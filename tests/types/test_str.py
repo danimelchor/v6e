@@ -38,12 +38,12 @@ all_test_cases = generate_tests(
         failure_args=["cbd", "bc", ""],
     ),
     V6eTest(
-        fn=[v.str().starts_with("a")],
+        fn=[v.str().startswith("a")],
         success_args=["a", "abc"],
         failure_args=["cbda", "bca", "ba"],
     ),
     V6eTest(
-        fn=[v.str().ends_with("a")],
+        fn=[v.str().endswith("a")],
         success_args=["a", "bca"],
         failure_args=["abcd", "bac", "ac"],
     ),

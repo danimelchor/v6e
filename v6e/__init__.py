@@ -6,6 +6,7 @@ from v6e.types.calendar import V6eDateTime, V6eTimeDelta
 from v6e.types.dict import V6eDict
 from v6e.types.list import V6eList
 from v6e.types.numbers import V6eFloat, V6eInt
+from v6e.types.path import V6ePath
 from v6e.types.string import V6eStr
 from v6e.types.struct import V6eStruct
 
@@ -18,6 +19,7 @@ timedelta = utils.alias(V6eTimeDelta, "timedelta")
 dict = utils.alias(V6eDict, "dict")
 struct = utils.alias(V6eStruct, "struct")
 list = utils.alias(V6eList, "list")
+path = utils.alias(V6ePath, "path")
 
 __all__ = [
     "ParseException",
@@ -27,6 +29,7 @@ __all__ = [
     "V6eFloat",
     "V6eInt",
     "V6eList",
+    "V6ePath",
     "V6eStr",
     "V6eStruct",
     "V6eTimeDelta",
@@ -39,6 +42,7 @@ __all__ = [
     "int",
     "list",
     "parser",
+    "path",
     "str",
     "struct",
     "timedelta",

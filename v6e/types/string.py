@@ -22,14 +22,14 @@ class V6eStr(V6eType[str]):
         return raw
 
     @parser
-    def starts_with(self, value: str, x: str, /, msg: str | None = None):
+    def startswith(self, value: str, x: str, /, msg: str | None = None):
         if not value.startswith(x):
             raise ValueError(
                 f"{value} does not start with {x}",
             )
 
     @parser
-    def ends_with(self, value: str, x: str, /, msg: str | None = None):
+    def endswith(self, value: str, x: str, /, msg: str | None = None):
         if not value.endswith(x):
             raise ValueError(
                 f"{value} does not start with {x}",

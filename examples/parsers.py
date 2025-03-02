@@ -18,13 +18,13 @@ def main() -> None:
     print_example(can_drink, 20)
 
     # You can chain multiple checks
-    interview_channel = v.str().starts_with("#").regex("interview.*[0-9]{2}-[0-9]{2}")
+    interview_channel = v.str().startswith("#").regex("interview.*[0-9]{2}-[0-9]{2}")
     print_title("Chaining Parsers - Slack Channel")
     print_example(interview_channel, "#interview-foo-feb-01-12")
     print_example(interview_channel, "#foo-feb-01-12")
 
     # You can OR multiple parsers
-    union = v.str().starts_with("foo") | v.int().gte(5)
+    union = v.str().startswith("foo") | v.int().gte(5)
     print_title("Union of parsers - foo or 5")
     print_example(union, "foobar")
     print_example(union, "1foo2")

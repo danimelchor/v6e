@@ -48,8 +48,8 @@ v.str()  # or v.V6eStr()
 v.str().length(5)
 v.str().contains("abc")
 
-v.str().starts_with("abc")
-v.str().ends_with("abc")
+v.str().startswith("abc")
+v.str().endswith("abc")
 v.str().regex(r"^[a-c]$")
 v.str().email()
 v.str().uuid()
@@ -83,6 +83,19 @@ v.tz(timezone.utc)
 
 ```python
 v.timedelta()  # or v.V6eTimeDelta
+```
+
+### Paths
+
+```python
+v.path()  # or v.V6ePath
+
+v.exists()
+v.expanduser()
+v.absolute()
+v.resolve()
+v.is_dir()
+v.is_file()
 ```
 
 ### Lists
