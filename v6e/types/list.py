@@ -56,3 +56,6 @@ class V6eList(V6eType[list[T]]):
     def nonempty(self, value: list[T], /, msg: str | None = None):
         if len(value) == 0:
             raise ValueError(f"The value {value} is empty")
+
+    def repr_args(self) -> str:
+        return str(self._inner)
