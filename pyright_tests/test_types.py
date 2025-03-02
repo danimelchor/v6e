@@ -26,6 +26,8 @@ t.assert_type(v.datetime().tz(timezone.utc), v.V6eDateTime)
 
 t.assert_type(v.timedelta(), v.V6eTimeDelta)
 
+t.assert_type(v.path(), v.V6ePath)
+
 t.assert_type(v.dict(a=v.int()), v.V6eDict)
 
 t.assert_type(v.struct(a=v.int(), b=v.bool()), v.V6eStruct)
@@ -41,4 +43,4 @@ def double(a: int) -> int:
 t.assert_type(v.int().custom(double), v.V6eInt)
 
 # ---- Unions ----
-t.assert_type(v.int().gt(4) | v.str().starts_with("foo"), v.V6eUnion[int, str])
+t.assert_type(v.int().gt(4) | v.str().startswith("foo"), v.V6eUnion[int, str])
