@@ -30,6 +30,14 @@ def _custom_fn(x: int) -> None:
             v.int().gte(5, msg="Custom error doesn't show"),
             "v6e.int().gte(5)",
         ),
+        (
+            v.int().list(),
+            "v6e.V6eList(v6e.int())",
+        ),
+        (
+            v.list(v.int()),
+            "v6e.list(v6e.int())",
+        ),
     ],
 )
 def test_base_class_repr(parser, expected):
